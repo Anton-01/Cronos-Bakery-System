@@ -50,7 +50,7 @@ server:
 jwt:
   secret: ${JWT_SECRET:mySecretKeyThatIsVeryLongAndSecureForProduction123456789}
   access-token-expiration: 900000      # 15 minutos
-  refresh-token-expiration: 604800000  # 7 días
+  refresh-token-expiration: 604800000  # 7 dï¿½as
   issuer: auth-service
 
 # Security Configuration
@@ -85,14 +85,14 @@ security:
     require-lowercase: true
     require-digit: true
     require-special-char: true
-    history-count: 5  # No reutilizar últimas 5 contraseñas
+    history-count: 5  # No reutilizar ï¿½ltimas 5 contraseï¿½as
 
   # Two-Factor Authentication
   two-factor:
     issuer: Enterprise Auth Service
     qr-code-width: 250
     qr-code-height: 250
-    window-size: 3  # Ventana de tiempo para códigos válidos
+    window-size: 3  # Ventana de tiempo para cï¿½digos vï¿½lidos
 
 # Actuator
 management:
@@ -131,3 +131,11 @@ springdoc:
     path: /swagger-ui.html
     operations-sorter: method
     tags-sorter: alpha
+
+# Application Settings
+app:
+  upload:
+    profile-pictures: uploads/profile-pictures
+    cover-pictures: uploads/cover-pictures
+    max-profile-picture-size: 5242880  # 5MB
+    max-cover-picture-size: 10485760   # 10MB
