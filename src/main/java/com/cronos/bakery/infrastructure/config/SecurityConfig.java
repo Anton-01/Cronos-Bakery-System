@@ -1,6 +1,6 @@
 package com.cronos.bakery.infrastructure.config;
 
-import com.enterprise.auth.infrastructure.security.JwtAuthenticationFilter;
+import com.cronos.bakery.infrastructure.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
