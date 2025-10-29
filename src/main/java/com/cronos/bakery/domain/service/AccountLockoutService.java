@@ -1,7 +1,7 @@
-package com.cronos.bakary.domain.service;
+package com.cronos.bakery.domain.service;
 
-import com.cronos.bakary.domain.entity.User;
-import com.cronos.bakary.infrastructure.config.SecurityProperties;
+import com.cronos.bakery.domain.entity.core.User;
+import com.cronos.bakery.infrastructure.config.SecurityProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

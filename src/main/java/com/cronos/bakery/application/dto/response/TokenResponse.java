@@ -1,4 +1,4 @@
-package com.cronos.bakery.application.dto;
+package com.cronos.bakery.application.dto.response;
 
 import lombok.*;
 

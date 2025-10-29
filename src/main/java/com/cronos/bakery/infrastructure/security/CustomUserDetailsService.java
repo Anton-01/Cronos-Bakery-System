@@ -1,7 +1,7 @@
-package com.cronos.bakary.infrastructure.security;
+package com.cronos.bakery.infrastructure.security;
 
-import com.cronos.bakary.domain.entity.User;
-import com.cronos.bakary.infrastructure.persistence.UserRepository;
+import com.cronos.bakery.domain.entity.core.User;
+import com.cronos.bakery.infrastructure.persistence.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.GrantedAuthority;

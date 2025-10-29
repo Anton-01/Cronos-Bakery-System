@@ -1,4 +1,4 @@
-package com.cronos.bakery.application.service;
+package com.cronos.bakery.application.service.enums;
 
 public enum StockOperation {
     ADD,

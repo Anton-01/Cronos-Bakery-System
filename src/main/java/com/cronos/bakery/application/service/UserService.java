@@ -1,13 +1,18 @@
-package com.cronos.bakary.application.service;
+package com.cronos.bakery.application.service;
 
-import com.cronos.bakary.application.dto.*;
-import com.cronos.bakary.domain.entity.Role;
-import com.cronos.bakary.domain.entity.User;
-import com.cronos.bakary.domain.service.PasswordValidationService;
-import com.cronos.bakary.domain.service.TwoFactorAuthenticationService;
-import com.cronos.bakary.infrastructure.exception.*;
-import com.cronos.bakary.infrastructure.persistence.RoleRepository;
-import com.cronos.bakary.infrastructure.persistence.UserRepository;
+import com.cronos.bakery.application.dto.request.ChangePasswordRequest;
+import com.cronos.bakery.application.dto.request.CreateUserRequest;
+import com.cronos.bakery.application.dto.request.UpdateUserRequest;
+import com.cronos.bakery.application.dto.request.VerifyTwoFactorRequest;
+import com.cronos.bakery.application.dto.response.TwoFactorSetupResponse;
+import com.cronos.bakery.application.dto.response.UserResponse;
+import com.cronos.bakery.domain.entity.Role;
+import com.cronos.bakery.domain.entity.core.User;
+import com.cronos.bakery.domain.service.PasswordValidationService;
+import com.cronos.bakery.domain.service.TwoFactorAuthenticationService;
+import com.cronos.bakery.infrastructure.exception.*;
+import com.cronos.bakery.infrastructure.persistence.RoleRepository;
+import com.cronos.bakery.infrastructure.persistence.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 10pt;
+            line-height: 1.4;
+            color: #333;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .company-info {
+            flex: 1;
+        }
+
+        .company-name {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .quote-number {
+            font-size: 18pt;
+            font-weight: bold;
+            text-align: right;
+            color: #667eea;
+        }
+
+        .info-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .info-box {
+            flex: 1;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            margin-right: 15px;
+        }
+
+        .info-box:last-child {
+            margin-right: 0;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #666;
+            font-size: 9pt;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 11pt;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        thead {
+            background-color: #667eea;
+            color: white;
+        }
+
+        th {
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 10pt;
+        }
+
+        td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .totals-section {
+            margin-top: 30px;
+            float: right;
+            width: 300px;
+        }
+
+        .totals-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .totals-row.subtotal {
+            font-size: 11pt;
+        }
+
+        .totals-row.tax {
+            font-size: 10pt;
+            color: #666;
+        }
+
+        .totals-row.total {
+            font-size: 14pt;
+            font-weight: bold;
+            background-color: #667eea;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .notes {
+            clear: both;
+            margin-top: 50px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #667eea;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 8pt;
+            color: #666;
+            padding-top: 10px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="company-info">
+        <div class="company-name" th:text="${user.businessName}">Demo Bakery</div>
+        <div th:if="${user.taxId}" th:text="'RFC: ' + ${user.taxId}">RFC: XXXX000000XXX</div>
+        <div th:text="${user.email}">demo@bakerycost.com</div>
+        <div th:if="${user.phoneNumber}" th:text="${user.phoneNumber}">+52-555-1234567</div>
+    </div>
+    <div>
+        <div class="quote-number">COTIZACIÓN</div>
+        <div class="quote-number" th:text="${quote.quoteNumber}">Q-2025001</div>
+    </div>
+</div>
+
+<div class="info-section">
+    <div class="info-box">
+        <div class="info-label">CLIENTE</div>
+        <div class="info-value" th:text="${quote.clientName}">María González</div>
+        <div class="info-value" th:if="${quote.clientEmail}" th:text="${quote.clientEmail}">maria@example.com</div>
+        <div class="info-value" th:if="${quote.clientPhone}" th:text="${quote.clientPhone}">+52-555-1234567</div>
+        <div class="info-value" th:if="${quote.clientAddress}" th:text="${quote.clientAddress}">Dirección</div>
+    </div>
+
+    <div class="info-box">
+        <div class="info-label">FECHA</div>
+        <div class="info-value" th:text="${dateFormat.format(quote.createdAt)}">26/10/2025</div>
+
+        <div class="info-label" style="margin-top: 10px;">VÁLIDA HASTA</div>
+        <div class="info-value" th:text="${dateFormat.format(quote.validUntil)}">25/11/2025</div>
+    </div>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th style="width: 5%;">#</th>
+        <th style="width: 40%;">Descripción</th>
+        <th style="width: 15%;" class="text-center">Cantidad</th>
+        <th style="width: 15%;" class="text-right">Precio Unit.</th>
+        <th style="width: 15%;" class="text-right">Subtotal</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item, iterStat : ${quote.items}">
+        <td class="text-center" th:text="${iterStat.count}">1</td>
+        <td>
+            <strong th:text="${item.recipe.name}">Galletas de Chocolate</strong>
+            <div style="font-size: 9pt; color: #666;" th:if="${item.notes}" th:text="${item.notes}">
+                Notas adicionales
+            </div>
+        </td>
+        <td class="text-center">
+            <span th:text="${#numbers.formatDecimal(item.quantity, 1, 2)}">24</span>
+            <span th:text="${item.recipe.yieldUnit}">piezas</span>
+        </td>
+        <td class="text-right" th:text="${currencyFormat.format(item.unitPrice)}">$20.00</td>
+        <td class="text-right" th:text="${currencyFormat.format(item.subtotal)}">$480.00</td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="totals-section">
+    <div class="totals-row subtotal">
+        <span>Subtotal:</span>
+        <span th:text="${currencyFormat.format(quote.subtotal)}">$480.00</span>
+    </div>
+    <div class="totals-row tax">
+        <span th:text="'IVA (' + ${#numbers.formatDecimal(quote.taxRate, 1, 0)} + '%)'">IVA (16%)</span>
+        <span th:text="${currencyFormat.format(quote.taxAmount)}">$76.80</span>
+    </div>
+    <div class="totals-row total">
+        <span>TOTAL:</span>
+        <span th:text="${currencyFormat.format(quote.total)}">$556.80</span>
+    </div>
+</div>
+
+<div class="notes" th:if="${quote.notes}">
+    <strong>Notas:</strong><br/>
+    <span th:text="${quote.notes}">Notas adicionales de la cotización</span>
+</div>
+
+<div class="footer">
+    <p>Este documento es una cotización y no representa un comprobante fiscal</p>
+    <p th:text="${user.businessName} + ' - ' + ${user.email}">Demo Bakery - demo@bakerycost.com</p>
+</div>
+</body>
+</html>
+
+<!-- ============= templates/pdf/recipe-cost-template.html ============= -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 10pt;
+            line-height: 1.4;
+            color: #333;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #4CAF50;
+        }
+
+        .recipe-title {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+
+        .recipe-info {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .info-item {
+            text-align: center;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #666;
+            font-size: 9pt;
+        }
+
+        .info-value {
+            font-size: 14pt;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        h2 {
+            color: #4CAF50;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        thead {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        th {
+            padding: 10px 8px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .cost-summary {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+        }
+
+        .cost-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 11pt;
+        }
+
+        .cost-row.total {
+            font-size: 16pt;
+            font-weight: bold;
+            color: #4CAF50;
+            border-top: 2px solid #4CAF50;
+            margin-top: 10px;
+            padding-top: 15px;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 8pt;
+            color: #666;
+            padding-top: 10px;
+            border-top: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="recipe-title" th:text="${recipe.name}">Galletas de Chocolate Chip</div>
+    <div th:text="'Análisis de Costos - ' + ${user.businessName}">Análisis de Costos</div>
+</div>
+
+<div class="recipe-info">
+    <div class="info-item">
+        <div class="info-label">RENDIMIENTO</div>
+        <div class="info-value">
+            <span th:text="${#numbers.formatDecimal(recipe.yieldQuantity * costCalc.scaleFactor, 1, 0)}">24</span>
+            <span th:text="${recipe.yieldUnit}">piezas</span>
+        </div>
+    </div>
+    <div class="info-item">
+        <div class="info-label">COSTO POR UNIDAD</div>
+        <div class="info-value" th:text="${currencyFormat.format(costCalc.costPerUnit)}">$15.00</div>
+    </div>
+    <div class="info-item">
+        <div class="info-label">COSTO TOTAL</div>
+        <div class="info-value" th:text="${currencyFormat.format(costCalc.totalCost)}">$360.00</div>
+    </div>
+</div>
+
+<h2>Ingredientes</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Ingrediente</th>
+        <th class="text-right">Cantidad</th>
+        <th class="text-right">Costo Unit.</th>
+        <th class="text-right">Costo Total</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ingredient : ${recipe.ingredients}">
+        <td th:text="${ingredient.rawMaterial.name}">Harina</td>
+        <td class="text-right">
+            <span th:text="${#numbers.formatDecimal(ingredient.quantity * costCalc.scaleFactor, 1, 2)}">250</span>
+            <span th:text="${ingredient.unit.code}">g</span>
+        </td>
+        <td class="text-right" th:text="${currencyFormat.format(ingredient.costPerUnit)}">$0.10</td>
+        <td class="text-right" th:text="${currencyFormat.format(ingredient.totalCost)}">$25.00</td>
+    </tr>
+    </tbody>
+</table>
+
+<h2 th:if="${!recipe.fixedCosts.isEmpty()}">Costos Fijos</h2>
+<table th:if="${!recipe.fixedCosts.isEmpty()}">
+    <thead>
+    <tr>
+        <th>Concepto</th>
+        <th>Tipo</th>
+        <th class="text-right">Monto</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="fixedCost : ${recipe.fixedCosts}">
+        <td th:text="${fixedCost.name}">Gas</td>
+        <td th:text="${fixedCost.type}">GAS</td>
+        <td class="text-right" th:text="${currencyFormat.format(fixedCost.amount)}">$2.00</td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="cost-summary">
+    <div class="cost-row">
+        <span>Costo de Materiales:</span>
+        <span th:text="${currencyFormat.format(costCalc.materialsCost)}">$300.00</span>
+    </div>
+    <div class="cost-row" th:if="${costCalc.subRecipesCost > 0}">
+        <span>Costo de Sub-recetas:</span>
+        <span th:text="${currencyFormat.format(costCalc.subRecipesCost)}">$0.00</span>
+    </div>
+    <div class="cost-row">
+        <span>Costos Fijos:</span>
+        <span th:text="${currencyFormat.format(costCalc.fixedCosts)}">$60.00</span>
+    </div>
+    <div class="cost-row total">
+        <span>COSTO TOTAL:</span>
+        <span th:text="${currencyFormat.format(costCalc.totalCost)}">$360.00</span>
+    </div>
+    <div class="cost-row total">
+        <span>COSTO POR UNIDAD:</span>
+        <span th:text="${currencyFormat.format(costCalc.costPerUnit)}">$15.00</span>
+    </div>
+</div>
+
+<div class="footer">
+    <p th:text="'Generado el ' + ${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy HH:mm')}">
+        Generado el 26/10/2025 10:30
+    </p>
+    <p th:text="${user.businessName}">Demo Bakery</p>
+</div>
+</body>
+</html>

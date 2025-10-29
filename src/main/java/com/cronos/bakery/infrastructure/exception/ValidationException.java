@@ -1,4 +1,4 @@
-package com.cronos.bakary.infrastructure.exception;
+package com.cronos.bakery.infrastructure.exception;
 
 import java.util.List;
 

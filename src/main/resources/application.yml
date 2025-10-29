@@ -1,1 +1,133 @@
-spring.application.name=Cronos Bakery System
+spring:
+  application:
+    name: Cronos Bakery System
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/auth_db
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        use_sql_comments: true
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=1000,expireAfterWrite=3600s
+    cache-names:
+      - users
+      - roles
+      - login-attempts
+      - rate-limits
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:mySecretKeyThatIsVeryLongAndSecureForProduction123456789}
+  access-token-expiration: 900000      # 15 minutos
+  refresh-token-expiration: 604800000  # 7 días
+  issuer: auth-service
+
+# Security Configuration
+security:
+  # Account Lockout
+  account-lockout:
+    max-attempts: 5
+    lockout-duration-minutes: 60
+    increment-factor: 2  # Incremento exponencial
+    max-lockout-duration-hours: 24
+
+  # Rate Limiting
+  rate-limit:
+    login:
+      capacity: 10
+      refill-tokens: 10
+      refill-duration-seconds: 60
+    register:
+      capacity: 5
+      refill-tokens: 5
+      refill-duration-seconds: 300
+    refresh:
+      capacity: 20
+      refill-tokens: 20
+      refill-duration-seconds: 60
+
+  # Password Policy
+  password:
+    min-length: 8
+    max-length: 128
+    require-uppercase: true
+    require-lowercase: true
+    require-digit: true
+    require-special-char: true
+    history-count: 5  # No reutilizar últimas 5 contraseñas
+
+  # Two-Factor Authentication
+  two-factor:
+    issuer: Enterprise Auth Service
+    qr-code-width: 250
+    qr-code-height: 250
+    window-size: 3  # Ventana de tiempo para códigos válidos
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# Logging
+logging:
+  level:
+    root: INFO
+    com.enterprise.auth: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} - %msg%n'
+    file: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
+  file:
+    name: logs/auth-service.log
+    max-size: 10MB
+    max-history: 30
+
+# OpenAPI Documentation
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha

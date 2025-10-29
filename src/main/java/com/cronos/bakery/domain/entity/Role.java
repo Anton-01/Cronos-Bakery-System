@@ -1,5 +1,7 @@
-package com.cronos.bakary.domain.entity;
+package com.cronos.bakery.domain.entity;
 
+import com.cronos.bakery.domain.entity.core.AuditableEntity;
+import com.cronos.bakery.domain.entity.core.User;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.HashSet;

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background-color: white;
+            padding: 30px;
+            border: 1px solid #ddd;
+        }
+        .quote-info {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .label {
+            font-weight: bold;
+            color: #666;
+        }
+        .total {
+            background-color: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1 th:text="#{email.quote.title}">Nueva Cotización</h1>
+    <h2 th:text="${quote.quoteNumber}">Q-2025001</h2>
+</div>
+
+<div class="content">
+    <p th:text="#{email.quote.greeting(${quote.clientName})}">Estimado(a) Cliente,</p>
+
+    <p th:text="#{email.quote.intro(${user.businessName})}">
+        Adjunto encontrarás la cotización solicitada de nuestra repostería.
+    </p>
+
+    <div class="quote-info">
+        <div class="info-row">
+            <span class="label" th:text="#{email.quote.number}">Número:</span>
+            <span th:text="${quote.quoteNumber}">Q-2025001</span>
+        </div>
+        <div class="info-row">
+            <span class="label" th:text="#{email.quote.date}">Fecha:</span>
+            <span th:text="${#temporals.format(quote.createdAt, 'dd/MM/yyyy')}">26/10/2025</span>
+        </div>
+        <div class="info-row">
+            <span class="label" th:text="#{email.quote.validUntil}">Válida hasta:</span>
+            <span th:text="${#temporals.format(quote.validUntil, 'dd/MM/yyyy')}">25/11/2025</span>
+        </div>
+    </div>
+
+    <div class="total">
+        <div th:text="#{email.quote.totalLabel}">TOTAL</div>
+        <div th:text="${#numbers.formatCurrency(quote.total)} + ' ' + ${quote.currency}">
+            $556.80 MXN
+        </div>
+    </div>
+
+    <p th:text="#{email.quote.attached}">
+        El PDF adjunto contiene todos los detalles de la cotización.
+    </p>
+
+    <center>
+        <a href="#" class="button" th:text="#{email.quote.button}">
+            Ver Cotización Online
+        </a>
+    </center>
+
+    <p th:text="#{email.quote.contact}">
+        Si tienes alguna pregunta, no dudes en contactarnos.
+    </p>
+
+    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+        <p><strong th:text="${user.businessName}">Demo Bakery</strong></p>
+        <p th:if="${user.phoneNumber}" th:text="#{email.quote.phone} + ': ' + ${user.phoneNumber}">
+            Teléfono: +52-555-1234567
+        </p>
+        <p th:text="${user.email}">demo@bakerycost.com</p>
+    </div>
+</div>
+
+<div class="footer">
+    <p th:text="#{email.footer.company}">Bakery Cost Management System</p>
+    <p th:text="#{email.footer.copyright}">© 2025 Todos los derechos reservados</p>
+</div>
+</body>
+</html>

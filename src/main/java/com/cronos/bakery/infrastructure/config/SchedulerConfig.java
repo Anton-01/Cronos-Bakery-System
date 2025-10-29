@@ -1,4 +1,4 @@
-package com.cronos.bakary.infrastructure.config;
+package com.cronos.bakery.infrastructure.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;

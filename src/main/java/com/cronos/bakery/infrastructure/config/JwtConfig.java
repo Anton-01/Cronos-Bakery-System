@@ -1,4 +1,4 @@
-package com.cronos.bakary.infrastructure.config;
+package com.cronos.bakery.infrastructure.config;
 
 import lombok.Getter;
 import lombok.Setter;

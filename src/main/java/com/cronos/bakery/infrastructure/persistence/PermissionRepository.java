@@ -1,7 +1,7 @@
-package com.cronos.bakary.infrastructure.persistence;
+package com.cronos.bakery.infrastructure.persistence;
 
 
-import com.cronos.bakary.domain.entity.Permission;
+import com.cronos.bakery.domain.entity.Permission;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;

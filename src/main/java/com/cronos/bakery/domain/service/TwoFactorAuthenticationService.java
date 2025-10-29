@@ -1,7 +1,7 @@
-package com.cronos.bakary.domain.service;
+package com.cronos.bakery.domain.service;
 
-import com.cronos.bakary.domain.entity.User;
-import com.cronos.bakary.infrastructure.config.SecurityProperties;
+import com.cronos.bakery.domain.entity.core.User;
+import com.cronos.bakery.infrastructure.config.SecurityProperties;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 import com.warrenstrange.googleauth.GoogleAuthenticatorQRGenerator;

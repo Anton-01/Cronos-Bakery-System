@@ -1,4 +1,4 @@
-package com.cronos.bakary.infrastructure.config;
+package com.cronos.bakery.infrastructure.config;
 
 import com.enterprise.auth.infrastructure.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #ff9800;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background-color: #f9f9f9;
+            padding: 30px;
+            border: 1px solid #ddd;
+        }
+        .alert {
+            background-color: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #ff9800;
+            color: white;
+        }
+        .low-stock {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1 th:text="#{email.lowStock.title}">⚠️ Alerta de Stock Bajo</h1>
+</div>
+
+<div class="content">
+    <p th:text="#{email.greeting(${user.firstName})}">Hola,</p>
+
+    <div class="alert">
+        <strong th:text="#{email.lowStock.warning}">
+            Los siguientes materiales están por debajo del stock mínimo:
+        </strong>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th th:text="#{email.lowStock.material}">Material</th>
+            <th th:text="#{email.lowStock.current}">Stock Actual</th>
+            <th th:text="#{email.lowStock.minimum}">Stock Mínimo</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${items}">
+            <td th:text="${item.materialName}">Harina</td>
+            <td class="low-stock"
+                th:text="${#numbers.formatDecimal(item.currentStock, 1, 2)} + ' ' + ${item.unit}">
+                3.5 kg
+            </td>
+            <td th:text="${#numbers.formatDecimal(item.minimumStock, 1, 2)} + ' ' + ${item.unit}">
+                5.0 kg
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p th:text="#{email.lowStock.action}">
+        Te recomendamos realizar un pedido pronto para evitar quedarte sin existencias.
+    </p>
+</div>
+
+<div class="footer">
+    <p th:text="#{email.footer.company}">Bakery Cost Management System</p>
+    <p th:text="#{email.footer.copyright}">© 2025 Todos los derechos reservados</p>
+</div>
+</body>
+</html>

@@ -1,4 +1,4 @@
-package com.cronos.bakary.infrastructure.exception;
+package com.cronos.bakery.infrastructure.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;

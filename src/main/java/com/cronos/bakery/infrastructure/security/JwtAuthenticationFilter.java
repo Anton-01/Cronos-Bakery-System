@@ -1,4 +1,4 @@
-package com.cronos.bakary.infrastructure.security;
+package com.cronos.bakery.infrastructure.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,4 +1,4 @@
-package com.cronos.bakery.domain.entity;
+package com.cronos.bakery.domain.entity.core;
 
 import jakarta.persistence.*;
 import lombok.Getter;

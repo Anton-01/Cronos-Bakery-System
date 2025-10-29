@@ -1,4 +1,4 @@
-package com.cronos.bakary.infrastructure.config;
+package com.cronos.bakery.infrastructure.config;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.cache.CacheManager;
@@ -14,13 +14,9 @@ public class CacheConfig {
     @Bean
     public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager(
-                "recipes",
-                "materials",
-                "categories",
-                "units",
-                "conversions",
-                "users",
-                "exchangeRates"
+                "recipes", "materials", "categories",
+                "units", "conversions", "exchangeRates",
+                "users", "roles", "login-attempts", "rate-limits"
         );
 
         cacheManager.setCaffeine(caffeineCacheBuilder());

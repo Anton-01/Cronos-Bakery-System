@@ -1,5 +1,6 @@
-package com.cronos.bakery.domain.entity;
+package com.cronos.bakery.domain.entity.core;
 
+import com.cronos.bakery.domain.entity.UnitType;
 import jakarta.persistence.*;
 import lombok.*;
 
