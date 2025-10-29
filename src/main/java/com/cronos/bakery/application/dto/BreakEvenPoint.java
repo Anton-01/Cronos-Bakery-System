@@ -1,0 +1,4 @@
+package com.cronos.bakery.application.dto;
+
+public class BreakEvenPoint {
+}
