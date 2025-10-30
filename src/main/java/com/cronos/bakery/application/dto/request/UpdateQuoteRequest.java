@@ -1,5 +1,6 @@
 package com.cronos.bakery.application.dto.request;
 
+import com.cronos.bakery.domain.entity.quote.enums.QuoteStatus;
 import lombok.Builder;
 import lombok.Data;
 

@@ -3,6 +3,7 @@ package com.cronos.bakery.application.service;
 import com.cronos.bakery.domain.entity.core.User;
 import com.cronos.bakery.domain.entity.customization.*;
 import com.cronos.bakery.infrastructure.exception.ResourceNotFoundException;
+import com.cronos.bakery.infrastructure.persistence.UserRepository;
 import com.cronos.bakery.infrastructure.persistence.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ public class CustomizationService {
     private final BrandingSettingsRepository brandingRepository;
     private final EmailSettingsRepository emailSettingsRepository;
     private final NotificationPreferencesRepository notificationPreferencesRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     // Branding Settings
 
@@ -38,7 +39,7 @@ public class CustomizationService {
         BrandingSettings existing = brandingRepository.findByUserId(userId)
             .orElseGet(() -> {
                 BrandingSettings newSettings = new BrandingSettings();
-                newSettings.setUser(userService.findById(userId));
+                newSettings.setUser(userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found")));
                 return newSettings;
             });
 
@@ -68,7 +69,7 @@ public class CustomizationService {
     }
 
     private BrandingSettings createDefaultBrandingSettings(Long userId) {
-        User user = userService.findById(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         BrandingSettings settings = BrandingSettings.builder()
             .user(user)
             .businessName(user.getUsername() + "'s Bakery")
@@ -100,7 +101,7 @@ public class CustomizationService {
         EmailSettings existing = emailSettingsRepository.findByUserId(userId)
             .orElseGet(() -> {
                 EmailSettings newSettings = new EmailSettings();
-                newSettings.setUser(userService.findById(userId));
+                newSettings.setUser(userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found")));
                 return newSettings;
             });
 
@@ -125,7 +126,7 @@ public class CustomizationService {
     }
 
     private EmailSettings createDefaultEmailSettings(Long userId) {
-        User user = userService.findById(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         EmailSettings settings = EmailSettings.builder()
             .user(user)
             .senderName(user.getUsername())
@@ -184,7 +185,7 @@ public class CustomizationService {
 
     private NotificationPreferences createDefaultNotificationPreferences(Long userId) {
         NotificationPreferences prefs = NotificationPreferences.builder()
-            .user(userService.findById(userId))
+            .user(userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found")))
             .notifyPriceChanges(true)
             .priceChangeThresholdPercent(5.0)
             .notifyPriceIncreaseOnly(false)

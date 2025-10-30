@@ -61,7 +61,7 @@ public class PasswordValidationService {
     public boolean isPasswordReused(User user, String newPassword) {
         int historyCount = securityProperties.getPassword().getHistoryCount();
 
-        List<PasswordHistory> passwordHistories = passwordHistoryRepository.findLastNPasswordsByUser(user, PageRequest.of(0, historyCount));
+        List<PasswordHistory> passwordHistories = passwordHistoryRepository.findByUserOrderByChangedAtDesc(user, PageRequest.of(0, historyCount));
 
         return passwordHistories.stream()
                 .anyMatch(ph -> passwordEncoder.matches(newPassword, ph.getPasswordHash()));
