@@ -173,7 +173,7 @@ public class PdfGenerationService {
     }
 
     private Locale getLocale(String language) {
-        return "es".equals(language) ? new Locale("es", "MX") : Locale.ENGLISH;
+        return "es".equals(language) ? Locale.of("es", "MX") : Locale.ENGLISH;
     }
 
     private NumberFormat getCurrencyFormat(Locale locale, String currency) {

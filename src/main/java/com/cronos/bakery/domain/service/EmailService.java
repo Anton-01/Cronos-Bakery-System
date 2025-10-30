@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Locale;
 
@@ -107,13 +108,13 @@ public class EmailService {
         helper.setSubject(subject);
         helper.setText(htmlContent, true);
         helper.setFrom("noreply@bakery-cost.com");
-        helper.addAttachment(attachmentName, () -> attachment, "application/pdf");
+        helper.addAttachment(attachmentName, () -> new ByteArrayInputStream(attachment), "application/pdf");
 
         mailSender.send(message);
     }
 
     private Locale getLocale(String language) {
-        return "es".equals(language) ? new Locale("es", "MX") : Locale.ENGLISH;
+        return "es".equals(language) ? Locale.of("es", "MX") : Locale.ENGLISH;
     }
 
     private String getMessage(String key, String language) {

@@ -1,10 +1,12 @@
 package com.cronos.bakery.application.dto.response;
 
+import com.cronos.bakery.domain.entity.recipes.enums.RecipeStatus;
 import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Data

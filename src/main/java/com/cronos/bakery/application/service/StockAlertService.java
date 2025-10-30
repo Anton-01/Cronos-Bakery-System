@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -41,10 +42,10 @@ public class StockAlertService {
             return;
         }
 
-        Double currentQuantity = material.getCurrentQuantity();
-        Double minQuantity = material.getMinQuantity();
+        BigDecimal currentQuantity = material.getCurrentStock();
+        BigDecimal minQuantity = material.getMinimumStock();
 
-        if (minQuantity == null || minQuantity == 0) {
+        if (minQuantity == null || minQuantity.compareTo(BigDecimal.ZERO) == 0) {
             return;
         }
 
@@ -56,21 +57,21 @@ public class StockAlertService {
         AlertType alertType = null;
         String message = null;
 
-        if (currentQuantity == 0) {
+        if (currentQuantity.compareTo(BigDecimal.ZERO) == 0) {
             alertType = AlertType.OUT_OF_STOCK;
             message = String.format("Out of stock: %s", material.getName());
-        } else if (currentQuantity < minQuantity) {
+        } else if (currentQuantity.compareTo(minQuantity) < 0) {
             alertType = AlertType.LOW_STOCK;
-            double percentRemaining = (currentQuantity / minQuantity) * 100;
+            double percentRemaining = currentQuantity.divide(minQuantity, 4, java.math.RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).doubleValue();
             message = String.format("Low stock alert: %s (%.0f%% remaining)",
                 material.getName(), percentRemaining);
-        } else if (currentQuantity <= (minQuantity * 1.2)) {
+        } else if (currentQuantity.compareTo(minQuantity.multiply(BigDecimal.valueOf(1.2))) <= 0) {
             alertType = AlertType.REORDER_POINT;
             message = String.format("Reorder point reached: %s", material.getName());
         }
 
         if (alertType != null) {
-            createAlert(userId, material, alertType, currentQuantity, minQuantity, message);
+            createAlert(userId, material, alertType, currentQuantity.doubleValue(), minQuantity.doubleValue(), message);
         }
     }
 

@@ -40,6 +40,21 @@ public class User extends AuditableEntity {
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
 
+    @Column(name = "business_name", length = 255)
+    private String businessName;
+
+    @Column(name = "default_currency", length = 3)
+    @Builder.Default
+    private String defaultCurrency = "MXN";
+
+    @Column(name = "default_language", length = 2)
+    @Builder.Default
+    private String defaultLanguage = "es";
+
+    @Column(name = "default_tax_rate", precision = 5, scale = 2)
+    @Builder.Default
+    private java.math.BigDecimal defaultTaxRate = java.math.BigDecimal.valueOf(16.00);
+
     @Builder.Default
     @Column(nullable = false)
     private Boolean enabled = true;

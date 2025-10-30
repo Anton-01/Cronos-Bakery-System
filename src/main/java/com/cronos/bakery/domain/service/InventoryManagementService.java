@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Service
@@ -110,7 +111,7 @@ public class InventoryManagementService {
         BigDecimal totalInventoryValue = allMaterials.stream()
                 .map(material -> {
                     BigDecimal costPerUnit = material.getUnitCost()
-                            .divide(material.getPurchaseQuantity(), 6, BigDecimal.ROUND_HALF_UP);
+                            .divide(material.getPurchaseQuantity(), 6, RoundingMode.HALF_UP);
                     return material.getCurrentStock().multiply(costPerUnit);
                 })
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
