@@ -6,6 +6,7 @@ import com.cronos.bakery.application.dto.request.UpdateUserRequest;
 import com.cronos.bakery.application.dto.request.VerifyTwoFactorRequest;
 import com.cronos.bakery.application.dto.response.TwoFactorSetupResponse;
 import com.cronos.bakery.application.dto.response.UserResponse;
+import com.cronos.bakery.application.mapper.UserMapper;
 import com.cronos.bakery.domain.entity.Role;
 import com.cronos.bakery.domain.entity.core.User;
 import com.cronos.bakery.domain.service.PasswordValidationService;

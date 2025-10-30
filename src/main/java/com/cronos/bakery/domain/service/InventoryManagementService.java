@@ -1,15 +1,17 @@
 package com.cronos.bakery.domain.service;
 
+import com.cronos.bakery.application.dto.inventory.InventorySummary;
+import com.cronos.bakery.application.dto.notifications.LowStockItem;
+import com.cronos.bakery.domain.entity.core.RawMaterial;
+import com.cronos.bakery.domain.entity.core.User;
+import com.cronos.bakery.infrastructure.persistence.RawMaterialRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

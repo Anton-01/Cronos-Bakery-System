@@ -16,6 +16,7 @@ import com.cronos.bakery.infrastructure.persistence.LoginHistoryRepository;
 import com.cronos.bakery.infrastructure.persistence.RefreshTokenRepository;
 import com.cronos.bakery.infrastructure.persistence.UserRepository;
 import com.cronos.bakery.infrastructure.security.JwtService;
+import com.cronos.bakery.infrastructure.util.RequestContextUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.*;

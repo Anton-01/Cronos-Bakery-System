@@ -1,6 +1,7 @@
 package com.cronos.bakery.domain.service;
 
 import com.cronos.bakery.application.dto.recipes.RecipeCostCalculation;
+import com.cronos.bakery.domain.entity.core.Allergen;
 import com.cronos.bakery.domain.entity.core.User;
 import com.cronos.bakery.domain.entity.quote.Quote;
 import com.cronos.bakery.domain.entity.recipes.Recipe;

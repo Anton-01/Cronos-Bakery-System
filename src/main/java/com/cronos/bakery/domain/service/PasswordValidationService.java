@@ -2,6 +2,7 @@ package com.cronos.bakery.domain.service;
 
 import com.cronos.bakery.domain.entity.PasswordHistory;
 import com.cronos.bakery.domain.entity.core.User;
+import com.cronos.bakery.infrastructure.config.SecurityProperties;
 import com.cronos.bakery.infrastructure.persistence.PasswordHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
