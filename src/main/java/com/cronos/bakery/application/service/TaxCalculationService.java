@@ -71,12 +71,12 @@ public class TaxCalculationService {
     /**
      * Calculate tax amount from percentage
      */
-    public BigDecimal calculateTax(BigDecimal amount, Double taxRatePercent) {
+    public BigDecimal calculateTax(BigDecimal amount, BigDecimal taxRatePercent) {
         if (amount == null || taxRatePercent == null) {
             return BigDecimal.ZERO;
         }
 
-        BigDecimal rate = BigDecimal.valueOf(taxRatePercent)
+        BigDecimal rate = taxRatePercent
             .divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP);
 
         return amount.multiply(rate).setScale(2, RoundingMode.HALF_UP);
@@ -98,7 +98,7 @@ public class TaxCalculationService {
             return amountWithTax;
         }
 
-        BigDecimal divisor = BigDecimal.valueOf(100 + taxRate.getTaxRatePercent())
+        BigDecimal divisor = BigDecimal.valueOf(100).add(taxRate.getTaxRatePercent())
             .divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP);
 
         return amountWithTax.divide(divisor, 2, RoundingMode.HALF_UP);
@@ -113,7 +113,7 @@ public class TaxCalculationService {
 
         return TaxBreakdown.builder()
             .baseAmount(amount)
-            .taxRate(taxRate.getTaxRatePercent())
+            .taxRate(taxRate.getTaxRatePercent() != null ? taxRate.getTaxRatePercent().doubleValue() : null)
             .taxName(taxRate.getTaxName())
             .taxAmount(taxAmount)
             .totalAmount(totalAmount)

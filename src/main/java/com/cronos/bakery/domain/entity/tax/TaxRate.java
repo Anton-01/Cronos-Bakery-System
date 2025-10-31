@@ -8,6 +8,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -52,13 +53,13 @@ public class TaxRate extends AuditableEntity {
     @DecimalMin(value = "0.0", message = "Tax rate cannot be negative")
     @DecimalMax(value = "100.0", message = "Tax rate cannot exceed 100%")
     @Column(name = "tax_rate_percent", nullable = false, precision = 5, scale = 2)
-    private Double taxRatePercent;
+    private BigDecimal taxRatePercent;
 
     @Column(name = "reduced_rate_percent", precision = 5, scale = 2)
-    private Double reducedRatePercent; // For special items
+    private BigDecimal reducedRatePercent; // For special items
 
     @Column(name = "super_reduced_rate_percent", precision = 5, scale = 2)
-    private Double superReducedRatePercent; // For essential items
+    private BigDecimal superReducedRatePercent; // For essential items
 
     @Column(name = "effective_date", nullable = false)
     private LocalDate effectiveDate = LocalDate.now();
