@@ -154,6 +154,9 @@ springdoc:
 
 # Application Settings
 app:
+  # Base URL for the application (used in emails, shared links, etc.)
+  base-url: ${APP_BASE_URL:http://localhost:8080}
+
   upload:
     profile-pictures: uploads/profile-pictures
     cover-pictures: uploads/cover-pictures

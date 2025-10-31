@@ -12,6 +12,8 @@ import com.cronos.bakery.domain.entity.quote.QuoteItem;
 import com.cronos.bakery.domain.entity.quote.enums.QuoteStatus;
 import com.cronos.bakery.domain.entity.recipes.ProfitMargin;
 import com.cronos.bakery.domain.entity.recipes.Recipe;
+import com.cronos.bakery.infrastructure.config.AppProperties;
+import com.cronos.bakery.infrastructure.constants.ApplicationConstants;
 import com.cronos.bakery.infrastructure.persistence.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +40,7 @@ public class QuoteService {
     private final RecipeCostCalculationService costCalculationService;
     private final PdfGenerationService pdfGenerationService;
     private final EmailService emailService;
+    private final AppProperties appProperties;
 
     /**
      * Creates a new quote
@@ -58,7 +61,7 @@ public class QuoteService {
                 .currency(user.getDefaultCurrency())
                 .taxRate(user.getDefaultTaxRate())
                 .validUntil(LocalDateTime.now().plusDays(request.getValidityDays() != null ?
-                        request.getValidityDays() : 30))
+                        request.getValidityDays() : ApplicationConstants.DEFAULT_QUOTE_VALIDITY_DAYS))
                 .build();
 
         // Add items
@@ -111,7 +114,11 @@ public class QuoteService {
 
         // Calculate tax
         BigDecimal taxAmount = subtotal.multiply(quote.getTaxRate())
-                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+                .divide(
+                        BigDecimal.valueOf(ApplicationConstants.PERCENTAGE_BASE),
+                        ApplicationConstants.MONETARY_CALCULATION_SCALE,
+                        ApplicationConstants.DEFAULT_ROUNDING_MODE
+                );
         quote.setTaxAmount(taxAmount);
 
         // Calculate total
@@ -160,7 +167,7 @@ public class QuoteService {
         quote.generateShareToken();
         quote = quoteRepository.save(quote);
 
-        String shareUrl = String.format("https://your-domain.com/shared-quotes/%s", quote.getShareToken());
+        String shareUrl = String.format("%s/shared-quotes/%s", appProperties.getBaseUrl(), quote.getShareToken());
 
         log.info("Share link generated for quote: {}", quote.getQuoteNumber());
 
@@ -250,7 +257,7 @@ public class QuoteService {
         long totalAccesses = accessLogRepository.countAccessesByQuote(quote);
         var recentLogs = accessLogRepository.findRecentAccessLogs(
                 quote,
-                LocalDateTime.now().minusDays(7)
+                LocalDateTime.now().minusDays(ApplicationConstants.RECENT_ACCESS_DAYS)
         );
 
         return QuoteAccessStatsResponse.builder()
@@ -268,9 +275,16 @@ public class QuoteService {
 
     private BigDecimal calculatePriceWithMargin(BigDecimal cost, BigDecimal marginPercentage) {
         BigDecimal multiplier = BigDecimal.ONE.add(
-                marginPercentage.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP)
+                marginPercentage.divide(
+                        BigDecimal.valueOf(ApplicationConstants.PERCENTAGE_BASE),
+                        ApplicationConstants.PERCENTAGE_CALCULATION_SCALE,
+                        ApplicationConstants.DEFAULT_ROUNDING_MODE
+                )
         );
-        return cost.multiply(multiplier).setScale(2, RoundingMode.HALF_UP);
+        return cost.multiply(multiplier).setScale(
+                ApplicationConstants.MONETARY_CALCULATION_SCALE,
+                ApplicationConstants.DEFAULT_ROUNDING_MODE
+        );
     }
 
     private void validateQuoteOwnership(Quote quote, String username) {

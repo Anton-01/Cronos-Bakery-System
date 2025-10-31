@@ -5,6 +5,7 @@ import com.cronos.bakery.application.dto.recipes.RecipeCostCalculation;
 import com.cronos.bakery.domain.entity.core.RawMaterial;
 import com.cronos.bakery.domain.entity.core.User;
 import com.cronos.bakery.domain.entity.recipes.*;
+import com.cronos.bakery.infrastructure.constants.ApplicationConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -139,7 +140,11 @@ public class RecipeCostCalculationService {
 
                 case PERCENTAGE_OF_MATERIAL:
                     cost = materialsCost.multiply(fixedCost.getPercentage())
-                            .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+                            .divide(
+                                    BigDecimal.valueOf(ApplicationConstants.PERCENTAGE_BASE),
+                                    ApplicationConstants.MONETARY_CALCULATION_SCALE,
+                                    ApplicationConstants.DEFAULT_ROUNDING_MODE
+                            );
                     break;
 
                 case PER_UNIT:
@@ -185,9 +190,16 @@ public class RecipeCostCalculationService {
 
     private BigDecimal calculatePriceWithMargin(BigDecimal cost, ProfitMargin margin) {
         BigDecimal multiplier = BigDecimal.ONE.add(
-                margin.getPercentage().divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP)
+                margin.getPercentage().divide(
+                        BigDecimal.valueOf(ApplicationConstants.PERCENTAGE_BASE),
+                        ApplicationConstants.PERCENTAGE_CALCULATION_SCALE,
+                        ApplicationConstants.DEFAULT_ROUNDING_MODE
+                )
         );
 
-        return cost.multiply(multiplier).setScale(2, RoundingMode.HALF_UP);
+        return cost.multiply(multiplier).setScale(
+                ApplicationConstants.MONETARY_CALCULATION_SCALE,
+                ApplicationConstants.DEFAULT_ROUNDING_MODE
+        );
     }
 }
