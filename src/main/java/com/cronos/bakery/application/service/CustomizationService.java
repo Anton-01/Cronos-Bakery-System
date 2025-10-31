@@ -2,6 +2,7 @@ package com.cronos.bakery.application.service;
 
 import com.cronos.bakery.domain.entity.core.User;
 import com.cronos.bakery.domain.entity.customization.*;
+import com.cronos.bakery.infrastructure.constants.ApplicationConstants;
 import com.cronos.bakery.infrastructure.exception.ResourceNotFoundException;
 import com.cronos.bakery.infrastructure.persistence.UserRepository;
 import com.cronos.bakery.infrastructure.persistence.repository.*;
@@ -73,14 +74,14 @@ public class CustomizationService {
         BrandingSettings settings = BrandingSettings.builder()
             .user(user)
             .businessName(user.getUsername() + "'s Bakery")
-            .primaryColor("#007bff")
-            .secondaryColor("#6c757d")
-            .accentColor("#28a745")
-            .textColor("#212529")
-            .backgroundColor("#ffffff")
-            .fontFamily("Arial, sans-serif")
-            .fontSizeBase(14)
-            .headerFontFamily("Georgia, serif")
+            .primaryColor(ApplicationConstants.DEFAULT_PRIMARY_COLOR)
+            .secondaryColor(ApplicationConstants.DEFAULT_SECONDARY_COLOR)
+            .accentColor(ApplicationConstants.DEFAULT_ACCENT_COLOR)
+            .textColor(ApplicationConstants.DEFAULT_TEXT_COLOR)
+            .backgroundColor(ApplicationConstants.DEFAULT_BACKGROUND_COLOR)
+            .fontFamily(ApplicationConstants.DEFAULT_FONT_FAMILY)
+            .fontSizeBase(ApplicationConstants.DEFAULT_FONT_SIZE)
+            .headerFontFamily(ApplicationConstants.DEFAULT_HEADER_FONT_FAMILY)
             .isActive(true)
             .build();
 
@@ -156,7 +157,7 @@ public class CustomizationService {
         NotificationPreferences existing = notificationPreferencesRepository.findByUserId(userId)
             .orElseGet(() -> {
                 NotificationPreferences newPrefs = new NotificationPreferences();
-                newPrefs.setUser(userService.findById(userId));
+                newPrefs.setUser(userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found")));
                 return newPrefs;
             });
 
@@ -187,15 +188,15 @@ public class CustomizationService {
         NotificationPreferences prefs = NotificationPreferences.builder()
             .user(userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found")))
             .notifyPriceChanges(true)
-            .priceChangeThresholdPercent(5.0)
+            .priceChangeThresholdPercent(ApplicationConstants.DEFAULT_PRICE_CHANGE_THRESHOLD)
             .notifyPriceIncreaseOnly(false)
             .notifyLowStock(true)
-            .lowStockThresholdPercent(20.0)
+            .lowStockThresholdPercent(ApplicationConstants.DEFAULT_LOW_STOCK_THRESHOLD)
             .notifyQuoteViewed(true)
             .notifyQuoteExpiring(true)
-            .quoteExpiryNoticeHours(24)
+            .quoteExpiryNoticeHours(ApplicationConstants.DEFAULT_QUOTE_EXPIRY_NOTICE_HOURS)
             .notifyRecipeCostChange(true)
-            .recipeCostChangeThresholdPercent(10.0)
+            .recipeCostChangeThresholdPercent(ApplicationConstants.DEFAULT_RECIPE_COST_CHANGE_THRESHOLD)
             .notifyDailySummary(false)
             .notifyWeeklyReport(false)
             .notifyMonthlyReport(true)

@@ -3,6 +3,7 @@ package com.cronos.bakery.domain.entity.quote;
 import com.cronos.bakery.domain.entity.core.AuditableEntity;
 import com.cronos.bakery.domain.entity.core.User;
 import com.cronos.bakery.domain.entity.quote.enums.QuoteStatus;
+import com.cronos.bakery.infrastructure.constants.ApplicationConstants;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
@@ -99,7 +100,7 @@ public class Quote extends AuditableEntity {
 
     public void generateShareToken() {
         this.shareToken = UUID.randomUUID().toString();
-        this.shareExpiresAt = LocalDateTime.now().plusHours(72);
+        this.shareExpiresAt = LocalDateTime.now().plusHours(ApplicationConstants.SHARE_LINK_EXPIRATION_HOURS);
         this.isShareable = true;
     }
 }
