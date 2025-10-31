@@ -18,6 +18,10 @@ services:
       - SPRING_DATASOURCE_USERNAME=cronos_system_user_price_mnr
       - SPRING_DATASOURCE_PASSWORD=cronos_system_254_8765_csmy-dd_0987_mnr
       - JWT_SECRET=OHmSZ+gdbyIu2cOaIK325VPhZs8Y0EW/jgAittcj+tsYIcXVXf5rESXzqfTe9uJsX9WfoD6DKTCeZO2SIjLBdA==
+      - MAIL_HOST=smtp-relay.brevo.com
+      - MAIL_PORT=587
+      - MAIL_USER=markuspiedra10@gmail.com
+      - MAIL_PASSWORD=xsmtpsib-b17ee4f5e065a152e67381d10b14aad9861195006c7b31569a27176eed11742a-Sz5FJWWQtPRVcBbo
     command: ["./mvnw", "spring-boot:run"]
   postgres-db:
     image: postgres:15-alpine
