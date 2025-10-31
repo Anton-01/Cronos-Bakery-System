@@ -408,4 +408,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+
+docker-compose.yml
+Dockerfile
+src/main/resources/application.yml
+
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,intellij+all,intellij+iml,macos,windows,maven,git,grails
