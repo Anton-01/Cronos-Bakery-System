@@ -42,7 +42,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Stream<GrantedAuthority> roleAuthorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()));
 
-        Stream<GrantedAuthority> permissionAuthorities = user.getRoles().stream()
+        Stream<SimpleGrantedAuthority> permissionAuthorities = user.getRoles().stream()
                 .flatMap(role -> role.getPermissions().stream())
                 .map(permission -> new SimpleGrantedAuthority(permission.getName()))
                 .distinct();

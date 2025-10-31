@@ -1,5 +1,6 @@
 package com.cronos.bakery.domain.entity.quote;
 
+import com.cronos.bakery.domain.entity.core.Allergen;
 import com.cronos.bakery.domain.entity.core.Category;
 import com.cronos.bakery.domain.entity.core.User;
 import com.cronos.bakery.domain.entity.recipes.*;

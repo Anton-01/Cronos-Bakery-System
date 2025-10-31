@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -77,7 +78,7 @@ public class PriceChangeNotificationService {
         }
 
         return newPrice.subtract(oldPrice)
-                .divide(oldPrice, 4, BigDecimal.ROUND_HALF_UP)
+                .divide(oldPrice, 4, RoundingMode.HALF_UP)
                 .multiply(BigDecimal.valueOf(100));
     }
 

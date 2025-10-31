@@ -15,8 +15,8 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/cronos_system_price_data
-      - SPRING_DATASOURCE_USERNAME=cronos_system_user_price
-      - SPRING_DATASOURCE_PASSWORD=cronos_system_254_8765_csmy-dd_0987
+      - SPRING_DATASOURCE_USERNAME=cronos_system_user_price_mnr
+      - SPRING_DATASOURCE_PASSWORD=cronos_system_254_8765_csmy-dd_0987_mnr
       - JWT_SECRET=OHmSZ+gdbyIu2cOaIK325VPhZs8Y0EW/jgAittcj+tsYIcXVXf5rESXzqfTe9uJsX9WfoD6DKTCeZO2SIjLBdA==
     command: ["./mvnw", "spring-boot:run"]
   postgres-db:
@@ -24,9 +24,9 @@ services:
     container_name: postgres-database
     restart: unless-stopped
     environment:
-      POSTGRES_DB: cronos_manager_app_data
-      POSTGRES_USER: cronos_usr_app_db
-      POSTGRES_PASSWORD: cronos_pass_8765_app-dd_0987
+      POSTGRES_DB: cronos_system_price_data
+      POSTGRES_USER: cronos_system_user_price_mnr
+      POSTGRES_PASSWORD: cronos_system_254_8765_csmy-dd_0987_mnr
     volumes:
       - postgres_cronos_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -35,7 +35,7 @@ services:
     networks:
       - app-cronos-price-network-manager
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U cronos_usr_app_db -d cronos_manager_app_data" ]
+      test: [ "CMD-SHELL", "pg_isready -U cronos_system_user_price_mnr -d cronos_system_price_data" ]
       interval: 10s
       timeout: 5s
       retries: 5

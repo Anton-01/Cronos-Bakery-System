@@ -45,10 +45,10 @@ spring:
 
   # Mail
   mail:
-    host: smtp.gmail.com
+    host: smtp-relay.brevo.com
     port: 587
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
+    username: markuspiedra10@gmail.com
+    password: xsmtpsib-b17ee4f5e065a152e67381d10b14aad9861195006c7b31569a27176eed11742a-Sz5FJWWQtPRVcBbo
     properties:
       mail:
         smtp:

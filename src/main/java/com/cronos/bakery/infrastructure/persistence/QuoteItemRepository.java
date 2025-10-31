@@ -1,5 +1,6 @@
 package com.cronos.bakery.infrastructure.persistence;
 
+import com.cronos.bakery.domain.entity.quote.QuoteItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
