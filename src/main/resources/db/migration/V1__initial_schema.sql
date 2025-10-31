@@ -103,6 +103,7 @@ CREATE TABLE categories (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by VARCHAR(100),
     updated_by VARCHAR(100),
+    version BIGINT DEFAULT 0,
     UNIQUE (name, user_id)
 );
 
@@ -117,6 +118,9 @@ CREATE TABLE allergens (
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    version BIGINT DEFAULT 0,
     UNIQUE (name, user_id)
 );
 
@@ -134,7 +138,11 @@ CREATE TABLE measurement_units (
     unit_type_id BIGINT NOT NULL REFERENCES unit_types(id),
     base_unit BOOLEAN NOT NULL DEFAULT FALSE,
     description VARCHAR(500),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    version BIGINT DEFAULT 0
 );
 
 CREATE TABLE conversion_factors (
@@ -146,6 +154,9 @@ CREATE TABLE conversion_factors (
     is_system_conversion BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    version BIGINT DEFAULT 0,
     UNIQUE (from_unit_id, to_unit_id, user_id)
 );
 
@@ -169,7 +180,8 @@ CREATE TABLE raw_materials (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by VARCHAR(100),
-    updated_by VARCHAR(100)
+    updated_by VARCHAR(100),
+    version BIGINT DEFAULT 0
 );
 
 CREATE TABLE raw_material_allergens (
@@ -208,11 +220,11 @@ CREATE TABLE recipes (
     notes TEXT,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     is_public BOOLEAN NOT NULL DEFAULT FALSE,
-    version INTEGER NOT NULL DEFAULT 1,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by VARCHAR(100),
-    updated_by VARCHAR(100)
+    updated_by VARCHAR(100),
+    version BIGINT DEFAULT 0
 );
 
 CREATE TABLE recipe_versions (
@@ -235,7 +247,11 @@ CREATE TABLE recipe_ingredients (
     is_optional BOOLEAN NOT NULL DEFAULT FALSE,
     preparation_notes TEXT,
     display_order INTEGER NOT NULL DEFAULT 0,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    version BIGINT DEFAULT 0
 );
 
 CREATE TABLE recipe_sub_recipes (
@@ -246,7 +262,11 @@ CREATE TABLE recipe_sub_recipes (
     is_optional BOOLEAN NOT NULL DEFAULT FALSE,
     notes TEXT,
     display_order INTEGER NOT NULL DEFAULT 0,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    version BIGINT DEFAULT 0
 );
 
 CREATE TABLE ingredient_substitutes (
@@ -270,7 +290,11 @@ CREATE TABLE recipe_fixed_costs (
     percentage_of_cost DECIMAL(5, 2),
     currency VARCHAR(3) NOT NULL DEFAULT 'MXN',
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    version BIGINT DEFAULT 0
 );
 
 CREATE TABLE recipe_cost_history (
@@ -311,7 +335,10 @@ CREATE TABLE profit_margins (
     is_default BOOLEAN NOT NULL DEFAULT FALSE,
     description VARCHAR(500),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    version BIGINT DEFAULT 0
 );
 
 CREATE TABLE quotes (
@@ -337,7 +364,8 @@ CREATE TABLE quotes (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_by VARCHAR(100),
-    updated_by VARCHAR(100)
+    updated_by VARCHAR(100),
+    version BIGINT DEFAULT 0
 );
 
 CREATE TABLE quote_items (
@@ -353,7 +381,11 @@ CREATE TABLE quote_items (
     unit_price DECIMAL(10, 2) NOT NULL,
     total_price DECIMAL(10, 2) NOT NULL,
     display_order INTEGER NOT NULL DEFAULT 0,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(100),
+    updated_by VARCHAR(100),
+    version BIGINT DEFAULT 0
 );
 
 CREATE TABLE quote_access_logs (
@@ -440,78 +472,78 @@ INSERT INTO unit_types (name, description, category) VALUES
     ('TIME', 'Time measurements', 'TIME');
 
 -- Insert measurement units
-INSERT INTO measurement_units (name, abbreviation, unit_type_id, base_unit) VALUES
+INSERT INTO measurement_units (name, abbreviation, unit_type_id, base_unit, created_by, updated_by) VALUES
     -- Weight
-    ('Kilogram', 'kg', (SELECT id FROM unit_types WHERE name = 'WEIGHT'), TRUE),
-    ('Gram', 'g', (SELECT id FROM unit_types WHERE name = 'WEIGHT'), FALSE),
-    ('Milligram', 'mg', (SELECT id FROM unit_types WHERE name = 'WEIGHT'), FALSE),
-    ('Pound', 'lb', (SELECT id FROM unit_types WHERE name = 'WEIGHT'), FALSE),
-    ('Ounce', 'oz', (SELECT id FROM unit_types WHERE name = 'WEIGHT'), FALSE),
+    ('Kilogram', 'kg', (SELECT id FROM unit_types WHERE name = 'WEIGHT'), TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Gram', 'g', (SELECT id FROM unit_types WHERE name = 'WEIGHT'), FALSE, 'SYSTEM', 'SYSTEM'),
+    ('Milligram', 'mg', (SELECT id FROM unit_types WHERE name = 'WEIGHT'), FALSE, 'SYSTEM', 'SYSTEM'),
+    ('Pound', 'lb', (SELECT id FROM unit_types WHERE name = 'WEIGHT'), FALSE, 'SYSTEM', 'SYSTEM'),
+    ('Ounce', 'oz', (SELECT id FROM unit_types WHERE name = 'WEIGHT'), FALSE, 'SYSTEM', 'SYSTEM'),
     -- Volume
-    ('Liter', 'L', (SELECT id FROM unit_types WHERE name = 'VOLUME'), TRUE),
-    ('Milliliter', 'ml', (SELECT id FROM unit_types WHERE name = 'VOLUME'), FALSE),
-    ('Cup', 'cup', (SELECT id FROM unit_types WHERE name = 'VOLUME'), FALSE),
-    ('Tablespoon', 'tbsp', (SELECT id FROM unit_types WHERE name = 'VOLUME'), FALSE),
-    ('Teaspoon', 'tsp', (SELECT id FROM unit_types WHERE name = 'VOLUME'), FALSE),
-    ('Gallon', 'gal', (SELECT id FROM unit_types WHERE name = 'VOLUME'), FALSE),
-    ('Fluid Ounce', 'fl oz', (SELECT id FROM unit_types WHERE name = 'VOLUME'), FALSE),
+    ('Liter', 'L', (SELECT id FROM unit_types WHERE name = 'VOLUME'), TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Milliliter', 'ml', (SELECT id FROM unit_types WHERE name = 'VOLUME'), FALSE, 'SYSTEM', 'SYSTEM'),
+    ('Cup', 'cup', (SELECT id FROM unit_types WHERE name = 'VOLUME'), FALSE, 'SYSTEM', 'SYSTEM'),
+    ('Tablespoon', 'tbsp', (SELECT id FROM unit_types WHERE name = 'VOLUME'), FALSE, 'SYSTEM', 'SYSTEM'),
+    ('Teaspoon', 'tsp', (SELECT id FROM unit_types WHERE name = 'VOLUME'), FALSE, 'SYSTEM', 'SYSTEM'),
+    ('Gallon', 'gal', (SELECT id FROM unit_types WHERE name = 'VOLUME'), FALSE, 'SYSTEM', 'SYSTEM'),
+    ('Fluid Ounce', 'fl oz', (SELECT id FROM unit_types WHERE name = 'VOLUME'), FALSE, 'SYSTEM', 'SYSTEM'),
     -- Count
-    ('Unit', 'unit', (SELECT id FROM unit_types WHERE name = 'UNIT'), TRUE),
-    ('Piece', 'pc', (SELECT id FROM unit_types WHERE name = 'UNIT'), FALSE),
-    ('Dozen', 'doz', (SELECT id FROM unit_types WHERE name = 'UNIT'), FALSE);
+    ('Unit', 'unit', (SELECT id FROM unit_types WHERE name = 'UNIT'), TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Piece', 'pc', (SELECT id FROM unit_types WHERE name = 'UNIT'), FALSE, 'SYSTEM', 'SYSTEM'),
+    ('Dozen', 'doz', (SELECT id FROM unit_types WHERE name = 'UNIT'), FALSE, 'SYSTEM', 'SYSTEM');
 
 -- Insert standard conversion factors
-INSERT INTO conversion_factors (from_unit_id, to_unit_id, factor, is_system_conversion) VALUES
+INSERT INTO conversion_factors (from_unit_id, to_unit_id, factor, is_system_conversion, created_by, updated_by) VALUES
     -- Weight conversions
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'kg'), (SELECT id FROM measurement_units WHERE abbreviation = 'g'), 1000, TRUE),
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'g'), (SELECT id FROM measurement_units WHERE abbreviation = 'kg'), 0.001, TRUE),
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'g'), (SELECT id FROM measurement_units WHERE abbreviation = 'mg'), 1000, TRUE),
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'mg'), (SELECT id FROM measurement_units WHERE abbreviation = 'g'), 0.001, TRUE),
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'kg'), (SELECT id FROM measurement_units WHERE abbreviation = 'lb'), 2.20462, TRUE),
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'lb'), (SELECT id FROM measurement_units WHERE abbreviation = 'kg'), 0.453592, TRUE),
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'lb'), (SELECT id FROM measurement_units WHERE abbreviation = 'oz'), 16, TRUE),
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'oz'), (SELECT id FROM measurement_units WHERE abbreviation = 'lb'), 0.0625, TRUE),
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'kg'), (SELECT id FROM measurement_units WHERE abbreviation = 'g'), 1000, TRUE, 'SYSTEM', 'SYSTEM'),
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'g'), (SELECT id FROM measurement_units WHERE abbreviation = 'kg'), 0.001, TRUE, 'SYSTEM', 'SYSTEM'),
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'g'), (SELECT id FROM measurement_units WHERE abbreviation = 'mg'), 1000, TRUE, 'SYSTEM', 'SYSTEM'),
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'mg'), (SELECT id FROM measurement_units WHERE abbreviation = 'g'), 0.001, TRUE, 'SYSTEM', 'SYSTEM'),
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'kg'), (SELECT id FROM measurement_units WHERE abbreviation = 'lb'), 2.20462, TRUE, 'SYSTEM', 'SYSTEM'),
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'lb'), (SELECT id FROM measurement_units WHERE abbreviation = 'kg'), 0.453592, TRUE, 'SYSTEM', 'SYSTEM'),
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'lb'), (SELECT id FROM measurement_units WHERE abbreviation = 'oz'), 16, TRUE, 'SYSTEM', 'SYSTEM'),
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'oz'), (SELECT id FROM measurement_units WHERE abbreviation = 'lb'), 0.0625, TRUE, 'SYSTEM', 'SYSTEM'),
     -- Volume conversions
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'L'), (SELECT id FROM measurement_units WHERE abbreviation = 'ml'), 1000, TRUE),
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'ml'), (SELECT id FROM measurement_units WHERE abbreviation = 'L'), 0.001, TRUE),
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'cup'), (SELECT id FROM measurement_units WHERE abbreviation = 'ml'), 236.588, TRUE),
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'ml'), (SELECT id FROM measurement_units WHERE abbreviation = 'cup'), 0.00422675, TRUE),
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'tbsp'), (SELECT id FROM measurement_units WHERE abbreviation = 'ml'), 14.7868, TRUE),
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'ml'), (SELECT id FROM measurement_units WHERE abbreviation = 'tbsp'), 0.067628, TRUE),
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'tsp'), (SELECT id FROM measurement_units WHERE abbreviation = 'ml'), 4.92892, TRUE),
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'ml'), (SELECT id FROM measurement_units WHERE abbreviation = 'tsp'), 0.202884, TRUE),
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'gal'), (SELECT id FROM measurement_units WHERE abbreviation = 'L'), 3.78541, TRUE),
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'L'), (SELECT id FROM measurement_units WHERE abbreviation = 'gal'), 0.264172, TRUE),
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'L'), (SELECT id FROM measurement_units WHERE abbreviation = 'ml'), 1000, TRUE, 'SYSTEM', 'SYSTEM'),
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'ml'), (SELECT id FROM measurement_units WHERE abbreviation = 'L'), 0.001, TRUE, 'SYSTEM', 'SYSTEM'),
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'cup'), (SELECT id FROM measurement_units WHERE abbreviation = 'ml'), 236.588, TRUE, 'SYSTEM', 'SYSTEM'),
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'ml'), (SELECT id FROM measurement_units WHERE abbreviation = 'cup'), 0.00422675, TRUE, 'SYSTEM', 'SYSTEM'),
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'tbsp'), (SELECT id FROM measurement_units WHERE abbreviation = 'ml'), 14.7868, TRUE, 'SYSTEM', 'SYSTEM'),
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'ml'), (SELECT id FROM measurement_units WHERE abbreviation = 'tbsp'), 0.067628, TRUE, 'SYSTEM', 'SYSTEM'),
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'tsp'), (SELECT id FROM measurement_units WHERE abbreviation = 'ml'), 4.92892, TRUE, 'SYSTEM', 'SYSTEM'),
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'ml'), (SELECT id FROM measurement_units WHERE abbreviation = 'tsp'), 0.202884, TRUE, 'SYSTEM', 'SYSTEM'),
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'gal'), (SELECT id FROM measurement_units WHERE abbreviation = 'L'), 3.78541, TRUE, 'SYSTEM', 'SYSTEM'),
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'L'), (SELECT id FROM measurement_units WHERE abbreviation = 'gal'), 0.264172, TRUE, 'SYSTEM', 'SYSTEM'),
     -- Count conversions
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'doz'), (SELECT id FROM measurement_units WHERE abbreviation = 'unit'), 12, TRUE),
-    ((SELECT id FROM measurement_units WHERE abbreviation = 'unit'), (SELECT id FROM measurement_units WHERE abbreviation = 'doz'), 0.0833333, TRUE);
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'doz'), (SELECT id FROM measurement_units WHERE abbreviation = 'unit'), 12, TRUE, 'SYSTEM', 'SYSTEM'),
+    ((SELECT id FROM measurement_units WHERE abbreviation = 'unit'), (SELECT id FROM measurement_units WHERE abbreviation = 'doz'), 0.0833333, TRUE, 'SYSTEM', 'SYSTEM');
 
 -- Insert common allergens
-INSERT INTO allergens (name, description, severity, is_system_allergen) VALUES
-    ('Gluten', 'Contains wheat, barley, rye, or related grains', 'HIGH', TRUE),
-    ('Dairy', 'Contains milk or milk products', 'MEDIUM', TRUE),
-    ('Eggs', 'Contains eggs or egg products', 'MEDIUM', TRUE),
-    ('Tree Nuts', 'Contains almonds, walnuts, cashews, etc.', 'HIGH', TRUE),
-    ('Peanuts', 'Contains peanuts or peanut products', 'HIGH', TRUE),
-    ('Soy', 'Contains soy or soy products', 'MEDIUM', TRUE),
-    ('Fish', 'Contains fish or fish products', 'HIGH', TRUE),
-    ('Shellfish', 'Contains shellfish (shrimp, crab, lobster, etc.)', 'HIGH', TRUE),
-    ('Sesame', 'Contains sesame seeds or sesame oil', 'MEDIUM', TRUE),
-    ('Sulfites', 'Contains sulfur dioxide or sulfites', 'LOW', TRUE);
+INSERT INTO allergens (name, description, severity, is_system_allergen, created_by, updated_by) VALUES
+    ('Gluten', 'Contains wheat, barley, rye, or related grains', 'HIGH', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Dairy', 'Contains milk or milk products', 'MEDIUM', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Eggs', 'Contains eggs or egg products', 'MEDIUM', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Tree Nuts', 'Contains almonds, walnuts, cashews, etc.', 'HIGH', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Peanuts', 'Contains peanuts or peanut products', 'HIGH', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Soy', 'Contains soy or soy products', 'MEDIUM', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Fish', 'Contains fish or fish products', 'HIGH', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Shellfish', 'Contains shellfish (shrimp, crab, lobster, etc.)', 'HIGH', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Sesame', 'Contains sesame seeds or sesame oil', 'MEDIUM', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Sulfites', 'Contains sulfur dioxide or sulfites', 'LOW', TRUE, 'SYSTEM', 'SYSTEM');
 
 -- Insert common categories
-INSERT INTO categories (name, description, color, is_system_category) VALUES
-    ('Flour & Grains', 'Flour, grains, and related products', '#8B4513', TRUE),
-    ('Sugar & Sweeteners', 'Sugar, honey, syrups, and sweeteners', '#FFB6C1', TRUE),
-    ('Fats & Oils', 'Butter, oils, shortening, and fats', '#FFD700', TRUE),
-    ('Dairy', 'Milk, cream, cheese, and dairy products', '#87CEEB', TRUE),
-    ('Eggs', 'Eggs and egg products', '#FFFACD', TRUE),
-    ('Flavorings', 'Vanilla, extracts, spices, and flavorings', '#9370DB', TRUE),
-    ('Leavening Agents', 'Baking powder, yeast, baking soda', '#F0E68C', TRUE),
-    ('Chocolate & Cocoa', 'Chocolate, cocoa powder, and related', '#8B4513', TRUE),
-    ('Nuts & Seeds', 'Nuts, seeds, and nut products', '#D2691E', TRUE),
-    ('Fruits', 'Fresh and dried fruits', '#FF6347', TRUE),
-    ('Decorations', 'Sprinkles, fondant, and decorations', '#FF69B4', TRUE),
-    ('Other', 'Miscellaneous ingredients', '#808080', TRUE);
+INSERT INTO categories (name, description, color, is_system_category, created_by, updated_by) VALUES
+    ('Flour & Grains', 'Flour, grains, and related products', '#8B4513', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Sugar & Sweeteners', 'Sugar, honey, syrups, and sweeteners', '#FFB6C1', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Fats & Oils', 'Butter, oils, shortening, and fats', '#FFD700', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Dairy', 'Milk, cream, cheese, and dairy products', '#87CEEB', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Eggs', 'Eggs and egg products', '#FFFACD', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Flavorings', 'Vanilla, extracts, spices, and flavorings', '#9370DB', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Leavening Agents', 'Baking powder, yeast, baking soda', '#F0E68C', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Chocolate & Cocoa', 'Chocolate, cocoa powder, and related', '#8B4513', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Nuts & Seeds', 'Nuts, seeds, and nut products', '#D2691E', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Fruits', 'Fresh and dried fruits', '#FF6347', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Decorations', 'Sprinkles, fondant, and decorations', '#FF69B4', TRUE, 'SYSTEM', 'SYSTEM'),
+    ('Other', 'Miscellaneous ingredients', '#808080', TRUE, 'SYSTEM', 'SYSTEM');
 
 COMMIT;

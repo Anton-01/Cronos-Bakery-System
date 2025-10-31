@@ -234,13 +234,15 @@ SELECT
 FROM users u WHERE u.username = 'demo_baker';
 
 -- Recipe ingredients for chocolate cake
-INSERT INTO recipe_ingredients (recipe_id, raw_material_id, quantity, unit_id, display_order)
+INSERT INTO recipe_ingredients (recipe_id, raw_material_id, quantity, unit_id, display_order, created_by, updated_by)
 SELECT
     r.id,
     rm.id,
     2.0,
     (SELECT id FROM measurement_units WHERE abbreviation = 'cup'),
-    1
+    1,
+    'SYSTEM',
+    'SYSTEM'
 FROM recipes r, raw_materials rm
 WHERE r.name = 'Pastel de Chocolate Clásico'
 AND rm.name = 'Harina de trigo todo uso'
@@ -251,7 +253,9 @@ SELECT
     rm.id,
     1.5,
     (SELECT id FROM measurement_units WHERE abbreviation = 'cup'),
-    2
+    2,
+    'SYSTEM',
+    'SYSTEM'
 FROM recipes r, raw_materials rm
 WHERE r.name = 'Pastel de Chocolate Clásico'
 AND rm.name = 'Azúcar refinada'
@@ -262,7 +266,9 @@ SELECT
     rm.id,
     3.0,
     (SELECT id FROM measurement_units WHERE abbreviation = 'unit'),
-    3
+    3,
+    'SYSTEM',
+    'SYSTEM'
 FROM recipes r, raw_materials rm
 WHERE r.name = 'Pastel de Chocolate Clásico'
 AND rm.name = 'Huevos frescos'
@@ -273,7 +279,9 @@ SELECT
     rm.id,
     0.5,
     (SELECT id FROM measurement_units WHERE abbreviation = 'cup'),
-    4
+    4,
+    'SYSTEM',
+    'SYSTEM'
 FROM recipes r, raw_materials rm
 WHERE r.name = 'Pastel de Chocolate Clásico'
 AND rm.name = 'Mantequilla sin sal'
@@ -284,20 +292,24 @@ SELECT
     rm.id,
     200.0,
     (SELECT id FROM measurement_units WHERE abbreviation = 'g'),
-    5
+    5,
+    'SYSTEM',
+    'SYSTEM'
 FROM recipes r, raw_materials rm
 WHERE r.name = 'Pastel de Chocolate Clásico'
 AND rm.name = 'Chocolate oscuro 70%'
 AND EXISTS (SELECT 1 FROM users WHERE username = 'demo_baker' AND id = r.user_id AND id = rm.user_id);
 
 -- Fixed costs for chocolate cake
-INSERT INTO recipe_fixed_costs (recipe_id, cost_type, description, calculation_method, fixed_amount)
+INSERT INTO recipe_fixed_costs (recipe_id, cost_type, description, calculation_method, fixed_amount, created_by, updated_by)
 SELECT
     r.id,
     'ELECTRICITY',
     'Costo de horno eléctrico',
     'FIXED_AMOUNT',
-    25.00
+    25.00,
+    'SYSTEM',
+    'SYSTEM'
 FROM recipes r
 WHERE r.name = 'Pastel de Chocolate Clásico'
 AND EXISTS (SELECT 1 FROM users WHERE username = 'demo_baker' AND id = r.user_id)
@@ -307,7 +319,9 @@ SELECT
     'LABOR',
     'Tiempo de preparación',
     'TIME_BASED',
-    50.00
+    50.00,
+    'SYSTEM',
+    'SYSTEM'
 FROM recipes r
 WHERE r.name = 'Pastel de Chocolate Clásico'
 AND EXISTS (SELECT 1 FROM users WHERE username = 'demo_baker' AND id = r.user_id);
@@ -336,13 +350,15 @@ FROM users u WHERE u.username = 'demo_baker';
 -- DEMO PROFIT MARGINS
 -- ================================================
 
-INSERT INTO profit_margins (name, margin_percent, user_id, is_default, description)
+INSERT INTO profit_margins (name, margin_percent, user_id, is_default, description, created_by, updated_by)
 SELECT
     'Margen Estándar',
     50.00,
     u.id,
     TRUE,
-    'Margen de ganancia estándar para productos regulares'
+    'Margen de ganancia estándar para productos regulares',
+    'SYSTEM',
+    'SYSTEM'
 FROM users u WHERE u.username = 'demo_baker'
 UNION ALL
 SELECT
@@ -350,7 +366,9 @@ SELECT
     75.00,
     u.id,
     FALSE,
-    'Margen para productos premium o eventos especiales'
+    'Margen para productos premium o eventos especiales',
+    'SYSTEM',
+    'SYSTEM'
 FROM users u WHERE u.username = 'demo_baker'
 UNION ALL
 SELECT
@@ -358,7 +376,9 @@ SELECT
     30.00,
     u.id,
     FALSE,
-    'Margen reducido para ventas al mayoreo'
+    'Margen reducido para ventas al mayoreo',
+    'SYSTEM',
+    'SYSTEM'
 FROM users u WHERE u.username = 'demo_baker';
 
 -- ================================================
@@ -399,7 +419,7 @@ SELECT
 FROM users u WHERE u.username = 'demo_baker';
 
 -- Quote items
-INSERT INTO quote_items (quote_id, recipe_id, item_name, description, quantity, unit_cost, total_cost, margin_percent, unit_price, total_price, display_order)
+INSERT INTO quote_items (quote_id, recipe_id, item_name, description, quantity, unit_cost, total_cost, margin_percent, unit_price, total_price, display_order, created_by, updated_by)
 SELECT
     q.id,
     r.id,
@@ -411,7 +431,9 @@ SELECT
     50.00,
     225.00,
     2250.00,
-    1
+    1,
+    'SYSTEM',
+    'SYSTEM'
 FROM quotes q, recipes r
 WHERE q.quote_number = 'Q-2024-001'
 AND r.name = 'Pastel de Chocolate Clásico'
