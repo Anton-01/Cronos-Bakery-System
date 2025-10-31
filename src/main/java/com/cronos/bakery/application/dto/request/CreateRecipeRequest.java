@@ -1,6 +1,6 @@
 package com.cronos.bakery.application.dto.request;
 
-import com.bakery.cost.domain.entity.RecipeStatus;
+import com.cronos.bakery.domain.entity.recipes.enums.RecipeStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;

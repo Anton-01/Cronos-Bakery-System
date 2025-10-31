@@ -1,12 +1,15 @@
 package com.cronos.bakery.domain.entity.quote;
 
+import com.cronos.bakery.domain.entity.core.Category;
 import com.cronos.bakery.domain.entity.core.User;
+import com.cronos.bakery.domain.entity.recipes.*;
 import com.cronos.bakery.domain.entity.recipes.enums.RecipeStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "quote_access_logs", indexes = {
@@ -38,7 +41,8 @@ public class QuoteAccessLog {
     @Column(name = "accessed_by_email")
     private String accessedByEmail;
 
-    @Column(name ="user_id", nullable =false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)

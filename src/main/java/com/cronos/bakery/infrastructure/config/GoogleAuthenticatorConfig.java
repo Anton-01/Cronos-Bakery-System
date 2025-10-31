@@ -1,7 +1,6 @@
 package com.cronos.bakery.infrastructure.config;
 
 import com.warrenstrange.googleauth.GoogleAuthenticator;
-import com.warrenstrange.googleauth.GoogleAuthenticatorConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +12,8 @@ public class GoogleAuthenticatorConfig {
 
     @Bean
     public GoogleAuthenticator googleAuthenticator() {
-        GoogleAuthenticatorConfig config = new GoogleAuthenticatorConfig.GoogleAuthenticatorConfigBuilder()
+        com.warrenstrange.googleauth.GoogleAuthenticatorConfig config =
+                new com.warrenstrange.googleauth.GoogleAuthenticatorConfig.GoogleAuthenticatorConfigBuilder()
                 .setWindowSize(securityProperties.getTwoFactor().getWindowSize())
                 .build();
 
