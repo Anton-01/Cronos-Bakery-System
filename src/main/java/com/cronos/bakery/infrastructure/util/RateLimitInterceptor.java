@@ -112,4 +112,6 @@ public class RateLimitInterceptor implements HandlerInterceptor{
             default -> new RateLimitConfig(10, 10, 60);
         };
     }
+
+    private record RateLimitConfig(long capacity, long refillTokens, long refillDurationSeconds) {}
 }
