@@ -39,31 +39,39 @@ public class BrandingSettings extends AuditableEntity {
     @NotBlank(message = "Primary color is required")
     @Pattern(regexp = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", message = "Invalid hex color format")
     @Column(name = "primary_color", nullable = false, length = 7)
+    @Builder.Default
     private String primaryColor = "#007bff";
 
     @NotBlank(message = "Secondary color is required")
     @Pattern(regexp = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", message = "Invalid hex color format")
     @Column(name = "secondary_color", nullable = false, length = 7)
+    @Builder.Default
     private String secondaryColor = "#6c757d";
 
     @NotBlank(message = "Accent color is required")
     @Pattern(regexp = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", message = "Invalid hex color format")
     @Column(name = "accent_color", nullable = false, length = 7)
+    @Builder.Default
     private String accentColor = "#28a745";
 
     @Column(name = "text_color", length = 7)
+    @Builder.Default
     private String textColor = "#212529";
 
     @Column(name = "background_color", length = 7)
+    @Builder.Default
     private String backgroundColor = "#ffffff";
 
     @Column(name = "font_family", length = 100)
+    @Builder.Default
     private String fontFamily = "Arial, sans-serif";
 
     @Column(name = "font_size_base")
+    @Builder.Default
     private Integer fontSizeBase = 14;
 
     @Column(name = "header_font_family", length = 100)
+    @Builder.Default
     private String headerFontFamily = "Georgia, serif";
 
     @Column(name = "company_slogan", length = 500)
@@ -88,5 +96,6 @@ public class BrandingSettings extends AuditableEntity {
     private String taxId;
 
     @Column(name = "is_active", nullable = false)
+    @Builder.Default
     private Boolean isActive = true;
 }

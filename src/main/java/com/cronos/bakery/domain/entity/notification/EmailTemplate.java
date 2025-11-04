@@ -43,6 +43,7 @@ public class EmailTemplate extends AuditableEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "language", nullable = false, length = 10)
+    @Builder.Default
     private TemplateLanguage language = TemplateLanguage.ES;
 
     @NotBlank(message = "Subject is required")
@@ -62,12 +63,15 @@ public class EmailTemplate extends AuditableEntity {
     private String variablesHelp; // JSON with available template variables
 
     @Column(name = "is_system_template", nullable = false)
+    @Builder.Default
     private Boolean isSystemTemplate = false;
 
     @Column(name = "is_default", nullable = false)
+    @Builder.Default
     private Boolean isDefault = false;
 
     @Column(name = "is_active", nullable = false)
+    @Builder.Default
     private Boolean isActive = true;
 
     @Version

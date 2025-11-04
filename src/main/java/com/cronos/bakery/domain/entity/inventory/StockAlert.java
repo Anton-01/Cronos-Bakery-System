@@ -8,6 +8,7 @@ import com.cronos.bakery.domain.entity.inventory.enums.AlertType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -44,22 +45,24 @@ public class StockAlert extends AuditableEntity {
     private AlertType alertType;
 
     @Column(name = "current_quantity", nullable = false)
-    private Double currentQuantity;
+    private BigDecimal currentQuantity;
 
     @Column(name = "threshold_quantity", nullable = false)
-    private Double thresholdQuantity;
+    private BigDecimal thresholdQuantity;
 
     @Column(name = "threshold_percent")
-    private Double thresholdPercent;
+    private BigDecimal thresholdPercent;
 
     @Column(name = "message", columnDefinition = "TEXT")
     private String message;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
+    @Builder.Default
     private AlertStatus status = AlertStatus.ACTIVE;
 
     @Column(name = "triggered_at", nullable = false)
+    @Builder.Default
     private LocalDateTime triggeredAt = LocalDateTime.now();
 
     @Column(name = "acknowledged_at")
@@ -69,11 +72,13 @@ public class StockAlert extends AuditableEntity {
     private LocalDateTime resolvedAt;
 
     @Column(name = "email_sent", nullable = false)
+    @Builder.Default
     private Boolean emailSent = false;
 
     @Column(name = "email_sent_at")
     private LocalDateTime emailSentAt;
 
     @Column(name = "auto_resolved", nullable = false)
+    @Builder.Default
     private Boolean autoResolved = false;
 }

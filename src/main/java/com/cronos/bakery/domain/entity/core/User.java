@@ -3,6 +3,8 @@ package com.cronos.bakery.domain.entity.core;
 import com.cronos.bakery.domain.entity.*;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -53,7 +55,7 @@ public class User extends AuditableEntity {
 
     @Column(name = "default_tax_rate", precision = 5, scale = 2)
     @Builder.Default
-    private java.math.BigDecimal defaultTaxRate = java.math.BigDecimal.valueOf(16.00);
+    private BigDecimal defaultTaxRate = new BigDecimal("16.00");
 
     @Builder.Default
     @Column(nullable = false)

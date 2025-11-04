@@ -46,10 +46,12 @@ public class ReportTemplate extends AuditableEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "language", nullable = false, length = 10)
+    @Builder.Default
     private TemplateLanguage language = TemplateLanguage.ES;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "format", nullable = false, length = 20)
+    @Builder.Default
     private TemplateFormat format = TemplateFormat.PDF;
 
     @Column(name = "header_html", columnDefinition = "TEXT")
@@ -65,24 +67,31 @@ public class ReportTemplate extends AuditableEntity {
     private String cssStyles;
 
     @Column(name = "include_charts", nullable = false)
+    @Builder.Default
     private Boolean includeCharts = true;
 
     @Column(name = "include_summary", nullable = false)
+    @Builder.Default
     private Boolean includeSummary = true;
 
     @Column(name = "include_detailed_breakdown", nullable = false)
+    @Builder.Default
     private Boolean includeDetailedBreakdown = true;
 
     @Column(name = "show_logo", nullable = false)
+    @Builder.Default
     private Boolean showLogo = true;
 
     @Column(name = "chart_color_scheme", length = 50)
+    @Builder.Default
     private String chartColorScheme = "default";
 
     @Column(name = "is_default", nullable = false)
+    @Builder.Default
     private Boolean isDefault = false;
 
     @Column(name = "is_active", nullable = false)
+    @Builder.Default
     private Boolean isActive = true;
 
     @Version

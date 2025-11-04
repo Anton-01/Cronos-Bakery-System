@@ -62,6 +62,7 @@ public class TaxRate extends AuditableEntity {
     private BigDecimal superReducedRatePercent; // For essential items
 
     @Column(name = "effective_date", nullable = false)
+    @Builder.Default
     private LocalDate effectiveDate = LocalDate.now();
 
     @Column(name = "expiry_date")
@@ -71,15 +72,19 @@ public class TaxRate extends AuditableEntity {
     private String description;
 
     @Column(name = "is_default", nullable = false)
+    @Builder.Default
     private Boolean isDefault = false;
 
     @Column(name = "is_active", nullable = false)
+    @Builder.Default
     private Boolean isActive = true;
 
     @Column(name = "applies_to_food", nullable = false)
+    @Builder.Default
     private Boolean appliesToFood = true;
 
     @Column(name = "tax_id_required", nullable = false)
+    @Builder.Default
     private Boolean taxIdRequired = false;
 
     @Version

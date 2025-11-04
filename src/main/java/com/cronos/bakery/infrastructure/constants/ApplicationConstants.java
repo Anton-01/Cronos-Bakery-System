@@ -1,5 +1,6 @@
 package com.cronos.bakery.infrastructure.constants;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
@@ -71,6 +72,17 @@ public final class ApplicationConstants {
      * Default rounding mode for calculations
      */
     public static final RoundingMode DEFAULT_ROUNDING_MODE = RoundingMode.HALF_UP;
+
+    /**
+     * Default division scale for calculations
+     */
+    public static final int DEFAULT_DIVISION_SCALE = 4;
+
+
+    /**
+     * Default value for calculate percentages
+     */
+    public static final BigDecimal HUNDRED = new BigDecimal("100");
 
     /**
      * Value of 100 used in percentage calculations
@@ -162,12 +174,12 @@ public final class ApplicationConstants {
     /**
      * Default price change threshold percentage for notifications
      */
-    public static final double DEFAULT_PRICE_CHANGE_THRESHOLD = 5.0;
+    public static final BigDecimal DEFAULT_PRICE_CHANGE_THRESHOLD = new BigDecimal("5.00");
 
     /**
      * Default low stock threshold percentage
      */
-    public static final double DEFAULT_LOW_STOCK_THRESHOLD = 20.0;
+    public static final BigDecimal DEFAULT_LOW_STOCK_THRESHOLD = new BigDecimal("20.00");
 
     /**
      * Default quote expiry notice hours
@@ -177,5 +189,5 @@ public final class ApplicationConstants {
     /**
      * Default recipe cost change threshold percentage
      */
-    public static final double DEFAULT_RECIPE_COST_CHANGE_THRESHOLD = 10.0;
+    public static final BigDecimal DEFAULT_RECIPE_COST_CHANGE_THRESHOLD = new BigDecimal("10.00");
 }

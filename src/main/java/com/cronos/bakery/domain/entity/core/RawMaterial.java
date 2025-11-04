@@ -87,4 +87,8 @@ public class RawMaterial extends AuditableEntity {
     @Column(name = "needs_recalculation")
     @Builder.Default
     private Boolean needsRecalculation = false;
+
+    @Column(name = "is_active")
+    @Builder.Default
+    private Boolean isActive = true;
 }

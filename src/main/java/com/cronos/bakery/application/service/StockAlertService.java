@@ -19,6 +19,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.cronos.bakery.infrastructure.util.PercentageUtils.calculatePercentage;
+
 /**
  * Service for managing stock alerts
  */
@@ -71,12 +73,11 @@ public class StockAlertService {
         }
 
         if (alertType != null) {
-            createAlert(userId, material, alertType, currentQuantity.doubleValue(), minQuantity.doubleValue(), message);
+            createAlert(userId, material, alertType, currentQuantity, minQuantity, message);
         }
     }
 
-    private void createAlert(Long userId, RawMaterial material, AlertType alertType,
-                            Double currentQuantity, Double thresholdQuantity, String message) {
+    private void createAlert(Long userId, RawMaterial material, AlertType alertType, BigDecimal currentQuantity, BigDecimal thresholdQuantity, String message) {
 
         StockAlert alert = StockAlert.builder()
             .user(material.getUser())
@@ -84,7 +85,7 @@ public class StockAlertService {
             .alertType(alertType)
             .currentQuantity(currentQuantity)
             .thresholdQuantity(thresholdQuantity)
-            .thresholdPercent((currentQuantity / thresholdQuantity) * 100)
+            .thresholdPercent(calculatePercentage(currentQuantity, thresholdQuantity))
             .message(message)
             .status(AlertStatus.ACTIVE)
             .triggeredAt(LocalDateTime.now())

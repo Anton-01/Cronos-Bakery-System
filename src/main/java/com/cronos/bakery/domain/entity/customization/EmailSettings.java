@@ -52,20 +52,25 @@ public class EmailSettings extends AuditableEntity {
     private String smtpPassword;
 
     @Column(name = "use_tls", nullable = false)
+    @Builder.Default
     private Boolean useTls = true;
 
     @Column(name = "use_ssl", nullable = false)
+    @Builder.Default
     private Boolean useSsl = false;
 
     @Column(name = "email_signature", columnDefinition = "TEXT")
     private String emailSignature;
 
     @Column(name = "auto_send_quotes", nullable = false)
+    @Builder.Default
     private Boolean autoSendQuotes = false;
 
     @Column(name = "use_custom_smtp", nullable = false)
+    @Builder.Default
     private Boolean useCustomSmtp = false;
 
     @Column(name = "is_active", nullable = false)
+    @Builder.Default
     private Boolean isActive = true;
 }

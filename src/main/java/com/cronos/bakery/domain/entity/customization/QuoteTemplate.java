@@ -40,10 +40,12 @@ public class QuoteTemplate extends AuditableEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "language", nullable = false, length = 10)
+    @Builder.Default
     private TemplateLanguage language = TemplateLanguage.ES;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "format", nullable = false, length = 20)
+    @Builder.Default
     private TemplateFormat format = TemplateFormat.PDF;
 
     @Column(name = "header_html", columnDefinition = "TEXT")
@@ -59,18 +61,23 @@ public class QuoteTemplate extends AuditableEntity {
     private String cssStyles;
 
     @Column(name = "show_logo", nullable = false)
+    @Builder.Default
     private Boolean showLogo = true;
 
     @Column(name = "show_item_images", nullable = false)
+    @Builder.Default
     private Boolean showItemImages = false;
 
     @Column(name = "show_allergens", nullable = false)
+    @Builder.Default
     private Boolean showAllergens = true;
 
     @Column(name = "show_tax_breakdown", nullable = false)
+    @Builder.Default
     private Boolean showTaxBreakdown = true;
 
     @Column(name = "show_payment_terms", nullable = false)
+    @Builder.Default
     private Boolean showPaymentTerms = true;
 
     @Column(name = "payment_terms", columnDefinition = "TEXT")
@@ -83,9 +90,11 @@ public class QuoteTemplate extends AuditableEntity {
     private String signatureText;
 
     @Column(name = "is_default", nullable = false)
+    @Builder.Default
     private Boolean isDefault = false;
 
     @Column(name = "is_active", nullable = false)
+    @Builder.Default
     private Boolean isActive = true;
 
     @Version

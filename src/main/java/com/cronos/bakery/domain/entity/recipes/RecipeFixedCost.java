@@ -46,4 +46,8 @@ public class RecipeFixedCost extends AuditableEntity {
     // For percentage-based calculation
     @Column(name = "percentage", precision = 5, scale = 2)
     private BigDecimal percentage;
+
+    @Column(name = "is_active")
+    @Builder.Default
+    private Boolean isActive = true;
 }
