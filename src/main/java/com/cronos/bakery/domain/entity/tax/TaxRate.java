@@ -86,7 +86,4 @@ public class TaxRate extends AuditableEntity {
     @Column(name = "tax_id_required", nullable = false)
     @Builder.Default
     private Boolean taxIdRequired = false;
-
-    @Version
-    private Long version;
 }

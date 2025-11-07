@@ -41,7 +41,7 @@ public class UserService {
     @Transactional
     @CacheEvict(value = "users", allEntries = true)
     public UserResponse createUser(CreateUserRequest request) {
-        // Validar que el usuario no exista
+
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new DuplicateResourceException("Username already exists");
         }

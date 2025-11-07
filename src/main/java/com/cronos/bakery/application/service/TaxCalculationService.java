@@ -44,7 +44,7 @@ public class TaxCalculationService {
         );
 
         if (!rates.isEmpty()) {
-            return rates.get(0); // Most specific match first
+            return rates.getFirst(); // Most specific match first
         }
 
         // Try system default
@@ -141,8 +141,7 @@ public class TaxCalculationService {
      */
     @Transactional
     public TaxRate saveTaxRate(TaxRate taxRate) {
-        log.info("Saving tax rate: {} for {}/{}",
-            taxRate.getTaxName(), taxRate.getCountryCode(), taxRate.getRegionCode());
+        log.info("Saving tax rate: {} for {}/{}", taxRate.getTaxName(), taxRate.getCountryCode(), taxRate.getRegionCode());
         return taxRateRepository.save(taxRate);
     }
 

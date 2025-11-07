@@ -108,9 +108,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({BadCredentialsException.class, AuthenticationException.class})
-    public ResponseEntity<ErrorResponse> handleAuthenticationException(
-            Exception ex,
-            HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleAuthenticationException(Exception ex, HttpServletRequest request) {
 
         log.error("Authentication error: {}", ex.getMessage());
 
@@ -126,9 +124,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(LockedException.class)
-    public ResponseEntity<ErrorResponse> handleLockedException(
-            LockedException ex,
-            HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleLockedException(LockedException ex, HttpServletRequest request) {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .status(HttpStatus.LOCKED.value())
@@ -142,9 +138,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidTokenException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidTokenException(
-            InvalidTokenException ex,
-            HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleInvalidTokenException(InvalidTokenException ex, HttpServletRequest request) {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .status(HttpStatus.UNAUTHORIZED.value())
@@ -158,9 +152,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> handleAccessDeniedException(
-            AccessDeniedException ex,
-            HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex, HttpServletRequest request) {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .status(HttpStatus.FORBIDDEN.value())
@@ -174,9 +166,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(RateLimitExceededException.class)
-    public ResponseEntity<ErrorResponse> handleRateLimitExceededException(
-            RateLimitExceededException ex,
-            HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleRateLimitExceededException(RateLimitExceededException ex, HttpServletRequest request) {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .status(HttpStatus.TOO_MANY_REQUESTS.value())
@@ -190,10 +180,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(
-            Exception ex,
-            HttpServletRequest request) {
-
+    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex, HttpServletRequest request) {
         log.error("Unexpected error occurred", ex);
 
         ErrorResponse errorResponse = ErrorResponse.builder()

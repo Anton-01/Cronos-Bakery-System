@@ -216,13 +216,11 @@ public class RawMaterialService {
      * Searches materials
      */
     @Transactional(readOnly = true)
-    public Page<RawMaterialResponse> searchMaterials(String username, String search,
-                                                     Pageable pageable) {
+    public Page<RawMaterialResponse> searchMaterials(String username, String search, Pageable pageable) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return rawMaterialRepository.searchByUser(user, search, pageable)
-                .map(this::mapToResponse);
+        return rawMaterialRepository.searchByUser(user, search, pageable).map(this::mapToResponse);
     }
 
     /**

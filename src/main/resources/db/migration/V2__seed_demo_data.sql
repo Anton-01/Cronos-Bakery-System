@@ -9,7 +9,7 @@
 
 -- Password: demo123 (BCrypt hash)
 INSERT INTO users (username, email, password, first_name, last_name, enabled, created_by, updated_by) VALUES
-('demo_baker', 'demo@cronosbakery.com', '$2a$10$rBL.5z5z5z5z5z5z5z5z5uN5N5N5N5N5N5N5N5N5N5N5N5N5N', 'Demo', 'Baker', TRUE, 'SYSTEM', 'SYSTEM'),
+('demo_baker', 'demo@cronosbakery.com', '$2a$12$J4f0.B4qSTyxmgNKrYLA5e5aWH/6E172fvr.1eyjn7p68wHQpd7Ri', 'Demo', 'Baker', TRUE, 'SYSTEM', 'SYSTEM'),
 ('pastry_chef', 'chef@cronosbakery.com', '$2a$10$rBL.5z5z5z5z5z5z5z5z5uN5N5N5N5N5N5N5N5N5N5N5N5N5N', 'Maria', 'Rodriguez', TRUE, 'SYSTEM', 'SYSTEM');
 
 -- Assign roles to demo users

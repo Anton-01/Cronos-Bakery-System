@@ -32,5 +32,6 @@ public interface RawMaterialRepository extends JpaRepository<RawMaterial, Long> 
     @Query("SELECT rm FROM RawMaterial rm WHERE rm.needsRecalculation = true AND rm.user = :user")
     List<RawMaterial> findMaterialsNeedingRecalculation(@Param("user") User user);
 
-    long countByUserAndCurrentStockLessThanMinimumStock(User user);
+    @Query("SELECT COUNT(rm) FROM RawMaterial rm WHERE rm.user = :user AND rm.currentStock < rm.minimumStock")
+    long countByUserAndCurrentStockLessThanMinimumStock(@Param("user") User user);
 }

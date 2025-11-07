@@ -8,14 +8,17 @@ import org.springframework.web.filter.CorsFilter;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.cronos.bakery.infrastructure.constants.ApplicationConstants.DEFAULT_ALLOWED_METHODS_HTTP;
+import static com.cronos.bakery.infrastructure.constants.ApplicationConstants.DEFAULT_ALLOWED_ORIGINS;
+
 @Configuration
 public class CorsConfig {
 
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:4200"));
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        config.setAllowedOrigins(List.of(DEFAULT_ALLOWED_ORIGINS));
+        config.setAllowedMethods(Arrays.asList(DEFAULT_ALLOWED_METHODS_HTTP));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);

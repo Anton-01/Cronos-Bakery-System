@@ -49,7 +49,7 @@ public class LoginHistory {
     @Column(nullable = false)
     private Boolean successful = true;
 
-    @Column(name = "failure_reason", length = 255)
+    @Column(name = "failure_reason")
     private String failureReason;
 
     @Column(name = "two_factor_used")

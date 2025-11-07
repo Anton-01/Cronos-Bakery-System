@@ -158,8 +158,23 @@ public final class ApplicationConstants {
      * Default allowed origins for development
      */
     public static final String[] DEFAULT_ALLOWED_ORIGINS = {
-        "http://localhost:3000",
-        "http://localhost:4200"
+        "http://localhost:3000", "http://localhost:4200"
+    };
+
+    /**
+     * Default allowed methods http accepted
+     */
+    public static final String[] DEFAULT_ALLOWED_METHODS_HTTP = {
+            "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"
+    };
+
+    /**
+     * Default allowed methods http accepted
+     */
+    public static final String[] DEFAULT_ALLOWED_PUBLIC_URL = {
+            "/auth/register", "/auth/login", "/auth/refresh",
+            "/actuator/**", "/api-docs/**", "/swagger-ui/**",
+            "/swagger-ui.html"
     };
 
     // ==================== Async Configuration Constants ====================

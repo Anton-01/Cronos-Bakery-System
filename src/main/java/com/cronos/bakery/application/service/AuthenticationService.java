@@ -20,9 +20,9 @@ import com.cronos.bakery.infrastructure.util.RequestContextUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.annotation.Lazy;
 import java.time.LocalDateTime;
 
 @Service
@@ -33,9 +33,9 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final LoginHistoryRepository loginHistoryRepository;
+    @Lazy
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
     private final AccountLockoutService lockoutService;
     private final TwoFactorAuthenticationService twoFactorService;
     private final RequestContextUtil requestContextUtil;
@@ -49,18 +49,13 @@ public class AuthenticationService {
         if (lockoutService.isAccountLocked(user)) {
             long remainingMinutes = lockoutService.getRemainingLockoutTime(user);
             recordFailedLogin(user, "Account locked");
-            throw new LockedException(
-                    String.format("Account is locked. Try again in %d minutes", remainingMinutes)
-            );
+            throw new LockedException(String.format("Account is locked. Try again in %d minutes", remainingMinutes));
         }
 
         try {
             // Autenticar credenciales
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getUsername(),
-                            request.getPassword()
-                    )
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
 
             // Si 2FA está habilitado, verificar el código
@@ -192,6 +187,8 @@ public class AuthenticationService {
     }
 
     private void recordFailedLogin(User user, String reason) {
+        log.info(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+        log.info("User {} tried to login with reason {}", user.getUsername(), reason);
         LoginHistory loginHistory = LoginHistory.builder()
                 .user(user)
                 .ipAddress(requestContextUtil.getClientIp())
@@ -203,6 +200,7 @@ public class AuthenticationService {
                 .failureReason(reason)
                 .build();
 
+        log.info(loginHistory.toString());
         loginHistoryRepository.save(loginHistory);
     }
 }
