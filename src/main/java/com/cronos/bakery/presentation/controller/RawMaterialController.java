@@ -79,6 +79,14 @@ public class RawMaterialController {
         return ResponseEntity.ok(ApiResponse.success("Stock updated successfully", response));
     }
 
+    @GetMapping("/statistics")
+    @Operation(summary = "Get raw materials statistics")
+    public ResponseEntity<ApiResponse<com.cronos.bakery.application.dto.response.RawMaterialStatisticsResponse>> getStatistics(Authentication authentication) {
+        com.cronos.bakery.application.dto.response.RawMaterialStatisticsResponse stats =
+                rawMaterialService.getStatistics(authentication.getName());
+        return ResponseEntity.ok(ApiResponse.success(stats));
+    }
+
     @GetMapping("/low-stock")
     @Operation(summary = "Get low stock items")
     public ResponseEntity<ApiResponse<List<RawMaterialResponse>>> getLowStockItems(Authentication authentication) {

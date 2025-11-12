@@ -265,6 +265,68 @@ public class RawMaterialService {
     }
 
     /**
+     * Gets statistics for raw materials
+     */
+    @Transactional(readOnly = true)
+    public com.cronos.bakery.application.dto.response.RawMaterialStatisticsResponse getStatistics(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<RawMaterial> allMaterials = rawMaterialRepository.findByUser(user);
+
+        long totalMaterials = allMaterials.size();
+        long activeMaterials = allMaterials.stream()
+                .filter(m -> m.getCurrentStock() != null && m.getCurrentStock().compareTo(BigDecimal.ZERO) > 0)
+                .count();
+        long inactiveMaterials = totalMaterials - activeMaterials;
+
+        long lowStockCount = allMaterials.stream()
+                .filter(m -> m.getMinimumStock() != null &&
+                            m.getCurrentStock() != null &&
+                            m.getCurrentStock().compareTo(m.getMinimumStock()) < 0 &&
+                            m.getCurrentStock().compareTo(BigDecimal.ZERO) > 0)
+                .count();
+
+        long outOfStockCount = allMaterials.stream()
+                .filter(m -> m.getCurrentStock() == null ||
+                            m.getCurrentStock().compareTo(BigDecimal.ZERO) == 0)
+                .count();
+
+        BigDecimal totalInventoryValue = allMaterials.stream()
+                .filter(m -> m.getCurrentStock() != null && m.getUnitCost() != null)
+                .map(m -> m.getCurrentStock().multiply(m.getUnitCost()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal averageMaterialCost = allMaterials.stream()
+                .filter(m -> m.getUnitCost() != null)
+                .map(RawMaterial::getUnitCost)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .divide(BigDecimal.valueOf(Math.max(1, allMaterials.size())), 2, java.math.RoundingMode.HALF_UP);
+
+        long categoriesCount = allMaterials.stream()
+                .map(m -> m.getCategory().getId())
+                .distinct()
+                .count();
+
+        long materialsWithAllergens = allMaterials.stream()
+                .filter(m -> m.getAllergens() != null && !m.getAllergens().isEmpty())
+                .count();
+
+        return com.cronos.bakery.application.dto.response.RawMaterialStatisticsResponse.builder()
+                .totalMaterials(totalMaterials)
+                .activeMaterials(activeMaterials)
+                .inactiveMaterials(inactiveMaterials)
+                .lowStockCount(lowStockCount)
+                .outOfStockCount(outOfStockCount)
+                .totalInventoryValue(totalInventoryValue)
+                .averageMaterialCost(averageMaterialCost)
+                .currency(user.getDefaultCurrency())
+                .categoriesCount(categoriesCount)
+                .materialsWithAllergens(materialsWithAllergens)
+                .build();
+    }
+
+    /**
      * Deletes a material
      */
     @Transactional
