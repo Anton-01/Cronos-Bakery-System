@@ -3,6 +3,7 @@ package com.cronos.bakery.presentation.controller;
 import com.cronos.bakery.application.dto.request.CreateQuoteRequest;
 import com.cronos.bakery.application.dto.request.UpdateQuoteRequest;
 import com.cronos.bakery.application.dto.response.*;
+import com.cronos.bakery.application.dto.response.QuoteStatisticsResponse;
 import com.cronos.bakery.domain.service.QuoteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -49,6 +50,14 @@ public class QuoteController {
     public ResponseEntity<ApiResponse<Page<QuoteResponse>>> getUserQuotes(Authentication authentication, Pageable pageable) {
         Page<QuoteResponse> quotes = quoteService.getUserQuotes(authentication.getName(), pageable);
         return ResponseEntity.ok(ApiResponse.success(quotes));
+    }
+
+    @GetMapping("/statistics")
+    @SecurityRequirement(name = "bearerAuth")
+    @Operation(summary = "Get quotes statistics")
+    public ResponseEntity<ApiResponse<QuoteStatisticsResponse>> getStatistics(Authentication authentication) {
+        QuoteStatisticsResponse statistics = quoteService.getStatistics(authentication.getName());
+        return ResponseEntity.ok(ApiResponse.success(statistics));
     }
 
     @PostMapping("/{id}/share")

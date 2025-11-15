@@ -1,5 +1,6 @@
 package com.cronos.bakery.application.service;
 
+import com.cronos.bakery.application.dto.response.StockAlertResponse;
 import com.cronos.bakery.domain.entity.core.RawMaterial;
 import com.cronos.bakery.domain.entity.core.User;
 import com.cronos.bakery.domain.entity.customization.NotificationPreferences;
@@ -7,6 +8,8 @@ import com.cronos.bakery.domain.entity.inventory.StockAlert;
 import com.cronos.bakery.domain.entity.inventory.enums.AlertStatus;
 import com.cronos.bakery.domain.entity.inventory.enums.AlertType;
 import com.cronos.bakery.infrastructure.persistence.repository.StockAlertRepository;
+import com.cronos.bakery.infrastructure.persistence.UserRepository;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -33,6 +36,7 @@ public class StockAlertService {
     private final StockAlertRepository stockAlertRepository;
     private final CustomizationService customizationService;
     private final RawMaterialService rawMaterialService;
+    private final UserRepository userRepository;
 
     /**
      * Check and create stock alerts for a material
@@ -206,5 +210,38 @@ public class StockAlertService {
         alert.setEmailSent(true);
         alert.setEmailSentAt(LocalDateTime.now());
         stockAlertRepository.save(alert);
+    }
+
+    /**
+     * Get active alerts as response DTOs
+     */
+    @Transactional(readOnly = true)
+    public List<StockAlertResponse> getActiveAlertsResponse(String username) {
+        User user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return stockAlertRepository.findByUserIdAndStatusOrderByTriggeredAtDesc(user.getId(), AlertStatus.ACTIVE)
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    private StockAlertResponse mapToResponse(StockAlert alert) {
+        return StockAlertResponse.builder()
+                .id(alert.getId())
+                .rawMaterialId(alert.getRawMaterial().getId())
+                .rawMaterialName(alert.getRawMaterial().getName())
+                .alertType(alert.getAlertType())
+                .status(alert.getStatus())
+                .currentQuantity(alert.getCurrentQuantity())
+                .thresholdQuantity(alert.getThresholdQuantity())
+                .thresholdPercent(alert.getThresholdPercent())
+                .message(alert.getMessage())
+                .triggeredAt(alert.getTriggeredAt())
+                .acknowledgedAt(alert.getAcknowledgedAt())
+                .resolvedAt(alert.getResolvedAt())
+                .emailSent(alert.getEmailSent())
+                .autoResolved(alert.getAutoResolved())
+                .build();
     }
 }

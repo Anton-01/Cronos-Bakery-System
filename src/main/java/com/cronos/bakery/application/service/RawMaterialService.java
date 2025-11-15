@@ -3,6 +3,7 @@ package com.cronos.bakery.application.service;
 import com.cronos.bakery.application.dto.request.CreateRawMaterialRequest;
 import com.cronos.bakery.application.dto.response.PriceHistoryResponse;
 import com.cronos.bakery.application.dto.response.RawMaterialResponse;
+import com.cronos.bakery.application.dto.response.RawMaterialStatisticsResponse;
 import com.cronos.bakery.application.service.enums.StockOperation;
 import com.cronos.bakery.domain.entity.core.*;
 import com.cronos.bakery.domain.service.PriceChangeNotificationService;
@@ -321,6 +322,44 @@ public class RawMaterialService {
                 .changedAt(history.getChangedAt())
                 .changedBy(history.getChangedBy())
                 .reason(history.getReason())
+                .build();
+    }
+
+    /**
+     * Gets statistics for raw materials
+     */
+    @Transactional(readOnly = true)
+    public RawMaterialStatisticsResponse getStatistics(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        long totalMaterials = rawMaterialRepository.countByUser(user);
+        long activeMaterials = rawMaterialRepository.countByUserAndIsActive(user, true);
+        long inactiveMaterials = rawMaterialRepository.countByUserAndIsActive(user, false);
+        long lowStockCount = rawMaterialRepository.countByUserAndCurrentStockLessThanMinimumStock(user);
+        long outOfStockCount = rawMaterialRepository.countByUserAndOutOfStock(user);
+        long totalCategories = rawMaterialRepository.countDistinctCategoriesByUser(user);
+
+        BigDecimal totalInventoryValue = rawMaterialRepository.calculateTotalInventoryValue(user);
+        if (totalInventoryValue == null) {
+            totalInventoryValue = BigDecimal.ZERO;
+        }
+
+        Double avgStockLevel = rawMaterialRepository.calculateAverageStockLevel(user);
+        BigDecimal averageStockLevel = avgStockLevel != null ?
+                BigDecimal.valueOf(avgStockLevel).setScale(2, java.math.RoundingMode.HALF_UP) :
+                BigDecimal.ZERO;
+
+        return RawMaterialStatisticsResponse.builder()
+                .totalMaterials(totalMaterials)
+                .activeMaterials(activeMaterials)
+                .inactiveMaterials(inactiveMaterials)
+                .lowStockCount(lowStockCount)
+                .outOfStockCount(outOfStockCount)
+                .totalInventoryValue(totalInventoryValue.setScale(2, java.math.RoundingMode.HALF_UP))
+                .currency(user.getDefaultCurrency())
+                .totalCategories(totalCategories)
+                .averageStockLevel(averageStockLevel)
                 .build();
     }
 }

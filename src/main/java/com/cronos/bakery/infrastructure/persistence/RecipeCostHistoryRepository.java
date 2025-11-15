@@ -26,4 +26,9 @@ public interface RecipeCostHistoryRepository extends JpaRepository<RecipeCostHis
             LocalDateTime start,
             LocalDateTime end
     );
+
+    @Query("SELECT AVG(rch.totalCost) FROM RecipeCostHistory rch " +
+            "WHERE rch.recipe.user.id = :userId " +
+            "AND rch.id IN (SELECT MAX(rch2.id) FROM RecipeCostHistory rch2 GROUP BY rch2.recipe.id)")
+    java.math.BigDecimal calculateAverageCostPerRecipeByUser(@Param("userId") Long userId);
 }

@@ -5,6 +5,7 @@ import com.cronos.bakery.application.dto.request.CreateQuoteRequest;
 import com.cronos.bakery.application.dto.request.QuoteItemRequest;
 import com.cronos.bakery.application.dto.request.UpdateQuoteRequest;
 import com.cronos.bakery.application.dto.response.*;
+import com.cronos.bakery.application.dto.response.QuoteStatisticsResponse;
 import com.cronos.bakery.domain.entity.core.User;
 import com.cronos.bakery.domain.entity.quote.Quote;
 import com.cronos.bakery.domain.entity.quote.QuoteAccessLog;
@@ -329,6 +330,57 @@ public class QuoteService {
                                 .subtotal(item.getSubtotal())
                                 .build())
                         .toList())
+                .build();
+    }
+
+    /**
+     * Gets statistics for quotes
+     */
+    @Transactional(readOnly = true)
+    public QuoteStatisticsResponse getStatistics(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        long totalQuotes = quoteRepository.countByUser(user);
+        long draftQuotes = quoteRepository.countByUserAndStatus(user, QuoteStatus.DRAFT);
+        long sentQuotes = quoteRepository.countByUserAndStatus(user, QuoteStatus.SENT);
+        long viewedQuotes = quoteRepository.countByUserAndStatus(user, QuoteStatus.VIEWED);
+        long acceptedQuotes = quoteRepository.countByUserAndStatus(user, QuoteStatus.ACCEPTED);
+        long rejectedQuotes = quoteRepository.countByUserAndStatus(user, QuoteStatus.REJECTED);
+
+        BigDecimal totalQuotedValue = quoteRepository.calculateTotalQuotedValue(user);
+        if (totalQuotedValue == null) {
+            totalQuotedValue = BigDecimal.ZERO;
+        }
+
+        BigDecimal totalAcceptedValue = quoteRepository.calculateTotalValueByStatus(user, QuoteStatus.ACCEPTED);
+        if (totalAcceptedValue == null) {
+            totalAcceptedValue = BigDecimal.ZERO;
+        }
+
+        // Calculate conversion rate
+        Double conversionRate = totalQuotes > 0 ?
+                (acceptedQuotes * 100.0 / totalQuotes) : 0.0;
+
+        // Count active quotes (not rejected, not expired)
+        long activeQuotes = quoteRepository.countActiveQuotes(
+                user,
+                LocalDateTime.now(),
+                List.of(QuoteStatus.REJECTED, QuoteStatus.EXPIRED)
+        );
+
+        return QuoteStatisticsResponse.builder()
+                .totalQuotes(totalQuotes)
+                .draftQuotes(draftQuotes)
+                .sentQuotes(sentQuotes)
+                .viewedQuotes(viewedQuotes)
+                .acceptedQuotes(acceptedQuotes)
+                .rejectedQuotes(rejectedQuotes)
+                .totalQuotedValue(totalQuotedValue.setScale(2, RoundingMode.HALF_UP))
+                .totalAcceptedValue(totalAcceptedValue.setScale(2, RoundingMode.HALF_UP))
+                .currency(user.getDefaultCurrency())
+                .conversionRate(conversionRate)
+                .activeQuotes(activeQuotes)
                 .build();
     }
 }

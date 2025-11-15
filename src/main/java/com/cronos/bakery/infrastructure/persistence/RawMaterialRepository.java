@@ -34,4 +34,20 @@ public interface RawMaterialRepository extends JpaRepository<RawMaterial, Long> 
 
     @Query("SELECT COUNT(rm) FROM RawMaterial rm WHERE rm.user = :user AND rm.currentStock < rm.minimumStock")
     long countByUserAndCurrentStockLessThanMinimumStock(@Param("user") User user);
+
+    long countByUser(User user);
+
+    long countByUserAndIsActive(User user, boolean isActive);
+
+    @Query("SELECT COUNT(rm) FROM RawMaterial rm WHERE rm.user = :user AND rm.currentStock = 0")
+    long countByUserAndOutOfStock(@Param("user") User user);
+
+    @Query("SELECT COUNT(DISTINCT rm.category.id) FROM RawMaterial rm WHERE rm.user = :user")
+    long countDistinctCategoriesByUser(@Param("user") User user);
+
+    @Query("SELECT SUM(rm.currentStock * rm.unitCost) FROM RawMaterial rm WHERE rm.user = :user")
+    java.math.BigDecimal calculateTotalInventoryValue(@Param("user") User user);
+
+    @Query("SELECT AVG(rm.currentStock / NULLIF(rm.minimumStock, 0) * 100) FROM RawMaterial rm WHERE rm.user = :user AND rm.minimumStock > 0")
+    Double calculateAverageStockLevel(@Param("user") User user);
 }

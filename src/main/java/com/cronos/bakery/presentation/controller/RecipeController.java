@@ -2,6 +2,7 @@ package com.cronos.bakery.presentation.controller;
 
 import com.cronos.bakery.application.dto.request.CreateRecipeRequest;
 import com.cronos.bakery.application.dto.response.*;
+import com.cronos.bakery.application.dto.response.RecipeStatisticsResponse;
 import com.cronos.bakery.application.service.RecipeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -53,6 +54,13 @@ public class RecipeController {
     public ResponseEntity<ApiResponse<Page<RecipeResponse>>> searchRecipes(@RequestParam String query, Authentication authentication, Pageable pageable) {
         Page<RecipeResponse> recipes = recipeService.searchRecipes(authentication.getName(), query, pageable);
         return ResponseEntity.ok(ApiResponse.success(recipes));
+    }
+
+    @GetMapping("/statistics")
+    @Operation(summary = "Get recipes statistics")
+    public ResponseEntity<ApiResponse<RecipeStatisticsResponse>> getStatistics(Authentication authentication) {
+        RecipeStatisticsResponse statistics = recipeService.getStatistics(authentication.getName());
+        return ResponseEntity.ok(ApiResponse.success(statistics));
     }
 
     @GetMapping("/{id}")

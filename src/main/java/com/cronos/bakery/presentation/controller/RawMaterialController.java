@@ -4,6 +4,7 @@ import com.cronos.bakery.application.dto.request.CreateRawMaterialRequest;
 import com.cronos.bakery.application.dto.response.ApiResponse;
 import com.cronos.bakery.application.dto.response.PriceHistoryResponse;
 import com.cronos.bakery.application.dto.response.RawMaterialResponse;
+import com.cronos.bakery.application.dto.response.RawMaterialStatisticsResponse;
 import com.cronos.bakery.application.service.RawMaterialService;
 import com.cronos.bakery.application.service.enums.StockOperation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -63,6 +64,13 @@ public class RawMaterialController {
     public ResponseEntity<ApiResponse<Page<RawMaterialResponse>>> searchMaterials(@RequestParam String query, Authentication authentication, Pageable pageable) {
         Page<RawMaterialResponse> materials = rawMaterialService.searchMaterials(authentication.getName(), query, pageable);
         return ResponseEntity.ok(ApiResponse.success(materials));
+    }
+
+    @GetMapping("/statistics")
+    @Operation(summary = "Get raw materials statistics")
+    public ResponseEntity<ApiResponse<RawMaterialStatisticsResponse>> getStatistics(Authentication authentication) {
+        RawMaterialStatisticsResponse statistics = rawMaterialService.getStatistics(authentication.getName());
+        return ResponseEntity.ok(ApiResponse.success(statistics));
     }
 
     @GetMapping("/{id}")

@@ -8,6 +8,7 @@ import com.cronos.bakery.application.dto.request.RecipeSubRecipeRequest;
 import com.cronos.bakery.application.dto.response.PriceWithMarginResponse;
 import com.cronos.bakery.application.dto.response.RecipeCostResponse;
 import com.cronos.bakery.application.dto.response.RecipeResponse;
+import com.cronos.bakery.application.dto.response.RecipeStatisticsResponse;
 import com.cronos.bakery.application.dto.response.RecipeVersionResponse;
 import com.cronos.bakery.application.service.enums.CostCalculationMethod;
 import com.cronos.bakery.application.service.enums.FixedCostType;
@@ -434,6 +435,40 @@ public class RecipeService {
                 .createdAt(version.getCreatedAt())
                 .createdBy(version.getCreatedBy())
                 .isCurrent(version.getIsCurrent())
+                .build();
+    }
+
+    /**
+     * Gets statistics for recipes
+     */
+    @Transactional(readOnly = true)
+    public RecipeStatisticsResponse getStatistics(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        long totalRecipes = recipeRepository.countByUser(user);
+        long draftRecipes = recipeRepository.countByUserAndStatus(user, RecipeStatus.DRAFT);
+        long activeRecipes = recipeRepository.countByUserAndStatus(user, RecipeStatus.ACTIVE);
+        long archivedRecipes = recipeRepository.countByUserAndStatus(user, RecipeStatus.ARCHIVED);
+        long recipesNeedingRecalculation = recipeRepository.countByUserAndNeedsRecalculation(user);
+        long totalCategories = recipeRepository.countDistinctCategoriesByUser(user);
+        long totalIngredients = recipeRepository.countTotalIngredientsByUser(user);
+
+        BigDecimal averageCost = costHistoryRepository.calculateAverageCostPerRecipeByUser(user.getId());
+        if (averageCost == null) {
+            averageCost = BigDecimal.ZERO;
+        }
+
+        return RecipeStatisticsResponse.builder()
+                .totalRecipes(totalRecipes)
+                .draftRecipes(draftRecipes)
+                .activeRecipes(activeRecipes)
+                .archivedRecipes(archivedRecipes)
+                .recipesNeedingRecalculation(recipesNeedingRecalculation)
+                .averageCostPerRecipe(averageCost.setScale(2, java.math.RoundingMode.HALF_UP))
+                .currency(user.getDefaultCurrency())
+                .totalCategories(totalCategories)
+                .totalIngredients(totalIngredients)
                 .build();
     }
 }

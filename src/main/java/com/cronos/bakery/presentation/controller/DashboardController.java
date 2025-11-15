@@ -2,6 +2,8 @@ package com.cronos.bakery.presentation.controller;
 
 import com.cronos.bakery.application.dto.response.ApiResponse;
 import com.cronos.bakery.application.dto.response.DashboardResponse;
+import com.cronos.bakery.application.dto.response.StockAlertResponse;
+import com.cronos.bakery.application.service.StockAlertService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/dashboard")
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 @SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Dashboard", description = "Dashboard statistics endpoints")
 public class DashboardController {
+
+    private final StockAlertService stockAlertService;
 
     @GetMapping
     @Operation(summary = "Get dashboard statistics")
@@ -26,5 +31,12 @@ public class DashboardController {
                 .build();
 
         return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @GetMapping("/alerts/low-stock")
+    @Operation(summary = "Get low stock alerts")
+    public ResponseEntity<ApiResponse<List<StockAlertResponse>>> getLowStockAlerts(Authentication authentication) {
+        List<StockAlertResponse> alerts = stockAlertService.getActiveAlertsResponse(authentication.getName());
+        return ResponseEntity.ok(ApiResponse.success(alerts));
     }
 }

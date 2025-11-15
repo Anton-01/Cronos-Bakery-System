@@ -32,4 +32,17 @@ public interface QuoteRepository extends JpaRepository<Quote, Long> {
 
     @Query("SELECT q FROM Quote q WHERE q.status = :status AND q.validUntil < :now")
     List<Quote> findExpiredQuotes(@Param("status") QuoteStatus status, @Param("now") LocalDateTime now);
+
+    long countByUser(User user);
+
+    long countByUserAndStatus(User user, QuoteStatus status);
+
+    @Query("SELECT SUM(q.total) FROM Quote q WHERE q.user = :user")
+    java.math.BigDecimal calculateTotalQuotedValue(@Param("user") User user);
+
+    @Query("SELECT SUM(q.total) FROM Quote q WHERE q.user = :user AND q.status = :status")
+    java.math.BigDecimal calculateTotalValueByStatus(@Param("user") User user, @Param("status") QuoteStatus status);
+
+    @Query("SELECT COUNT(q) FROM Quote q WHERE q.user = :user AND q.validUntil >= :now AND q.status NOT IN (:excludedStatuses)")
+    long countActiveQuotes(@Param("user") User user, @Param("now") LocalDateTime now, @Param("excludedStatuses") List<QuoteStatus> excludedStatuses);
 }

@@ -30,4 +30,17 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     @Query("SELECT r FROM Recipe r WHERE r.needsRecalculation = true AND r.user = :user")
     List<Recipe> findRecipesNeedingRecalculation(@Param("user") User user);
+
+    long countByUser(User user);
+
+    long countByUserAndStatus(User user, RecipeStatus status);
+
+    @Query("SELECT COUNT(r) FROM Recipe r WHERE r.user = :user AND r.needsRecalculation = true")
+    long countByUserAndNeedsRecalculation(@Param("user") User user);
+
+    @Query("SELECT COUNT(DISTINCT r.category.id) FROM Recipe r WHERE r.user = :user AND r.category IS NOT NULL")
+    long countDistinctCategoriesByUser(@Param("user") User user);
+
+    @Query("SELECT COUNT(ri) FROM RecipeIngredient ri WHERE ri.recipe.user = :user")
+    long countTotalIngredientsByUser(@Param("user") User user);
 }
