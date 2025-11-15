@@ -10,6 +10,6 @@ public interface StockAlertMapper {
 
     @Mapping(target = "rawMaterialId", source = "rawMaterial.id")
     @Mapping(target = "rawMaterialName", source = "rawMaterial.name")
-    @Mapping(target = "rawMaterialUnit", source = "rawMaterial.unit")
+    @Mapping(target = "rawMaterialUnit", source = "rawMaterial.id")
     StockAlertResponse toResponse(StockAlert stockAlert);
 }

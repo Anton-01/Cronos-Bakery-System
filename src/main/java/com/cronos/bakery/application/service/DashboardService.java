@@ -63,7 +63,7 @@ public class DashboardService {
         List<PriceAlert> priceAlerts = new ArrayList<>();
 
         // Get low stock alerts
-        List<LowStockAlert> lowStockAlerts = getLowStockAlerts(username);
+        List<LowStockAlert> lowStockAlerts = getLowStockAlertsByUsername(username);
 
         return DashboardResponse.builder()
                 .inventoryStats(inventoryStats)
@@ -128,7 +128,7 @@ public class DashboardService {
                 .build();
     }
 
-    private List<LowStockAlert> getLowStockAlerts(String username) {
+    private List<LowStockAlert> getLowStockAlertsByUsername(String username) {
         List<RawMaterialResponse> lowStockMaterials = rawMaterialService.getLowStockItems(username);
 
         return lowStockMaterials.stream()

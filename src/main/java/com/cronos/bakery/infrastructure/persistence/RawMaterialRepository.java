@@ -15,6 +15,7 @@ import java.util.List;
 @Repository
 public interface RawMaterialRepository extends JpaRepository<RawMaterial, Long> {
 
+    List<RawMaterial> findByUser(User user);
     Page<RawMaterial> findByUser(User user, Pageable pageable);
 
     Page<RawMaterial> findByUserAndCategory(User user, Category category, Pageable pageable);

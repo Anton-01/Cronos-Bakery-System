@@ -11,11 +11,11 @@ public interface EmailSettingsMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "createdBy", ignore = true)
-    @Mapping(target = "updatedBy", ignore = true)
-    @Mapping(target = "version", ignore = true)
+    //@Mapping(target = "createdAt", ignore = true)
+    //@Mapping(target = "updatedAt", ignore = true)
+    //@Mapping(target = "createdBy", ignore = true)
+    //@Mapping(target = "updatedBy", ignore = true)
+    //@Mapping(target = "version", ignore = true)
     EmailSettings toEntity(EmailSettingsRequest request);
 
     EmailSettingsResponse toResponse(EmailSettings emailSettings);

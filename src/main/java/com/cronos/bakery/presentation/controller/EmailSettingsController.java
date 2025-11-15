@@ -42,9 +42,7 @@ public class EmailSettingsController {
 
     @PutMapping
     @Operation(summary = "Update email settings")
-    public ResponseEntity<ApiResponse<EmailSettingsResponse>> updateEmailSettings(
-            @Valid @RequestBody EmailSettingsRequest request,
-            Authentication authentication) {
+    public ResponseEntity<ApiResponse<EmailSettingsResponse>> updateEmailSettings(@Valid @RequestBody EmailSettingsRequest request, Authentication authentication) {
 
         User user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));

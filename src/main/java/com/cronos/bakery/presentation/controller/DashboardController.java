@@ -41,10 +41,7 @@ public class DashboardController {
 
     @GetMapping("/activity")
     @Operation(summary = "Get recent activities")
-    public ResponseEntity<ApiResponse<List<RecentActivity>>> getRecentActivities(
-            Authentication authentication,
-            @Parameter(description = "Maximum number of activities to return", example = "5")
-            @RequestParam(defaultValue = "5") Integer limit) {
+    public ResponseEntity<ApiResponse<List<RecentActivity>>> getRecentActivities(Authentication authentication, @Parameter(description = "Maximum number of activities to return", example = "5") @RequestParam(defaultValue = "5") Integer limit) {
         List<RecentActivity> activities = dashboardService.getRecentActivities(authentication.getName(), limit);
         return ResponseEntity.ok(ApiResponse.success(activities));
     }

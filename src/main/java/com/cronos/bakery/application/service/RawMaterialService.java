@@ -3,6 +3,7 @@ package com.cronos.bakery.application.service;
 import com.cronos.bakery.application.dto.request.CreateRawMaterialRequest;
 import com.cronos.bakery.application.dto.response.PriceHistoryResponse;
 import com.cronos.bakery.application.dto.response.RawMaterialResponse;
+import com.cronos.bakery.application.dto.response.RawMaterialStatisticsResponse;
 import com.cronos.bakery.application.service.enums.StockOperation;
 import com.cronos.bakery.domain.entity.core.*;
 import com.cronos.bakery.domain.service.PriceChangeNotificationService;
@@ -19,6 +20,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -268,15 +270,13 @@ public class RawMaterialService {
      * Gets statistics for raw materials
      */
     @Transactional(readOnly = true)
-    public com.cronos.bakery.application.dto.response.RawMaterialStatisticsResponse getStatistics(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public RawMaterialStatisticsResponse getStatistics(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
 
         List<RawMaterial> allMaterials = rawMaterialRepository.findByUser(user);
 
         long totalMaterials = allMaterials.size();
-        long activeMaterials = allMaterials.stream()
-                .filter(m -> m.getCurrentStock() != null && m.getCurrentStock().compareTo(BigDecimal.ZERO) > 0)
+        long activeMaterials = allMaterials.stream().filter(m -> m.getCurrentStock() != null && m.getCurrentStock().compareTo(BigDecimal.ZERO) > 0)
                 .count();
         long inactiveMaterials = totalMaterials - activeMaterials;
 
@@ -298,8 +298,8 @@ public class RawMaterialService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal averageMaterialCost = allMaterials.stream()
-                .filter(m -> m.getUnitCost() != null)
                 .map(RawMaterial::getUnitCost)
+                .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .divide(BigDecimal.valueOf(Math.max(1, allMaterials.size())), 2, java.math.RoundingMode.HALF_UP);
 
@@ -312,7 +312,7 @@ public class RawMaterialService {
                 .filter(m -> m.getAllergens() != null && !m.getAllergens().isEmpty())
                 .count();
 
-        return com.cronos.bakery.application.dto.response.RawMaterialStatisticsResponse.builder()
+        return RawMaterialStatisticsResponse.builder()
                 .totalMaterials(totalMaterials)
                 .activeMaterials(activeMaterials)
                 .inactiveMaterials(inactiveMaterials)

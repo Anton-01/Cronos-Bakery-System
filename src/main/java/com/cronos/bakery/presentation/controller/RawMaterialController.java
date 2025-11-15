@@ -4,6 +4,7 @@ import com.cronos.bakery.application.dto.request.CreateRawMaterialRequest;
 import com.cronos.bakery.application.dto.response.ApiResponse;
 import com.cronos.bakery.application.dto.response.PriceHistoryResponse;
 import com.cronos.bakery.application.dto.response.RawMaterialResponse;
+import com.cronos.bakery.application.dto.response.RawMaterialStatisticsResponse;
 import com.cronos.bakery.application.service.RawMaterialService;
 import com.cronos.bakery.application.service.enums.StockOperation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -81,9 +82,8 @@ public class RawMaterialController {
 
     @GetMapping("/statistics")
     @Operation(summary = "Get raw materials statistics")
-    public ResponseEntity<ApiResponse<com.cronos.bakery.application.dto.response.RawMaterialStatisticsResponse>> getStatistics(Authentication authentication) {
-        com.cronos.bakery.application.dto.response.RawMaterialStatisticsResponse stats =
-                rawMaterialService.getStatistics(authentication.getName());
+    public ResponseEntity<ApiResponse<RawMaterialStatisticsResponse>> getStatistics(Authentication authentication) {
+        RawMaterialStatisticsResponse stats = rawMaterialService.getStatistics(authentication.getName());
         return ResponseEntity.ok(ApiResponse.success(stats));
     }
 
@@ -104,7 +104,6 @@ public class RawMaterialController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete material")
     public ResponseEntity<ApiResponse<Void>> deleteMaterial(@PathVariable Long id, Authentication authentication) {
-
         rawMaterialService.deleteMaterial(id, authentication.getName());
         return ResponseEntity.ok(ApiResponse.success("Material deleted successfully", null));
     }
